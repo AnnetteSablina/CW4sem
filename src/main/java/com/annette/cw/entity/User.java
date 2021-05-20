@@ -8,10 +8,9 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User implements Cloneable{
+public class User implements Cloneable {
 
     private Integer id;
     private String username;
@@ -26,5 +25,18 @@ public class User implements Cloneable{
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    public User(Integer id, String username, String password, String email, String firstName, String lastName,
+                Organization organization, String role, Instant createdDate) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.organization = organization;
+        this.role = role;
+        this.createdDate = createdDate;
     }
 }

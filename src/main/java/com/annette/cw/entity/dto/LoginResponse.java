@@ -1,4 +1,4 @@
-package com.annette.cw.ditch;
+package com.annette.cw.entity.dto;
 
 public class LoginResponse {
     public String authenticationToken;

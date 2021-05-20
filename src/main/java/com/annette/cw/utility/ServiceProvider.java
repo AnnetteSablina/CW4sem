@@ -2,6 +2,7 @@ package com.annette.cw.utility;
 
 import com.annette.cw.controller.DecisionService;
 import com.annette.cw.controller.OrganizationService;
+import com.annette.cw.controller.UserService;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

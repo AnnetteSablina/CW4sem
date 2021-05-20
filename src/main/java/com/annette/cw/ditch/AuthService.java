@@ -1,5 +1,7 @@
 package com.annette.cw.ditch;
 
+import com.annette.cw.entity.dto.LoginRequest;
+import com.annette.cw.entity.dto.LoginResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
