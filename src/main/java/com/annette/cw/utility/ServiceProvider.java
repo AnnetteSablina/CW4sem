@@ -1,8 +1,8 @@
 package com.annette.cw.utility;
 
-import com.annette.cw.controller.DecisionService;
-import com.annette.cw.controller.OrganizationService;
-import com.annette.cw.controller.UserService;
+import com.annette.cw.dao.DecisionDAO;
+import com.annette.cw.dao.OrganizationDAO;
+import com.annette.cw.dao.UserDAO;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -13,27 +13,27 @@ public class ServiceProvider {
     private volatile static ServiceProvider instance;
     private AsyncService service = new AsyncService();
     private AuthInterceptor interceptor = new AuthInterceptor();
-    private UserService userService;
-    private DecisionService decisionService;
-    private OrganizationService organizationService;
+    private UserDAO userDAO;
+    private DecisionDAO decisionDAO;
+    private OrganizationDAO organizationDAO;
 
-    public UserService getUserService() {
-        return userService;
+    public UserDAO getUserDAO() {
+        return userDAO;
     }
 
     public AsyncService getService() {
         return service;
     }
 
-    public DecisionService getDecisionService() {
-        return decisionService;
+    public DecisionDAO getDecisionDAO() {
+        return decisionDAO;
     }
 
-    public OrganizationService getOrganizationService() {
-        return organizationService;
+    public OrganizationDAO getOrganizationDAO() {
+        return organizationDAO;
     }
 
-    public ServiceProvider() {
+    private ServiceProvider() {
         var client = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .connectTimeout(30, TimeUnit.SECONDS)
@@ -45,9 +45,9 @@ public class ServiceProvider {
                 .client(client)
                 .build();
 
-        userService = retrofit.create(UserService.class);
-        decisionService = retrofit.create(DecisionService.class);
-        organizationService = retrofit.create(OrganizationService.class);
+        userDAO = retrofit.create(UserDAO.class);
+        decisionDAO = retrofit.create(DecisionDAO.class);
+        organizationDAO = retrofit.create(OrganizationDAO.class);
     }
 
     public static ServiceProvider getInstance() {
@@ -60,6 +60,7 @@ public class ServiceProvider {
         }
         return instance;
     }
+
     public void updateToken(String token) {
         interceptor.setKey(token);
     }

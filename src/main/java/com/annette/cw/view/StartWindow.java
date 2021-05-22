@@ -1,10 +1,8 @@
 package com.annette.cw.view;
 
 import com.annette.cw.entity.dto.AuthenticationResponse;
-import com.annette.cw.repository.Provider;
-import com.annette.cw.utility.Position;
-import com.annette.cw.utility.Result;
-import com.annette.cw.utility.TokenChecker;
+import com.annette.cw.service.Provider;
+import com.annette.cw.utility.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,10 +10,12 @@ import java.awt.*;
 public class StartWindow {
 
     private static JPanel controlPanel; // для соединения всех частей кнопки + текст + поля
-    private static final JPanel grid = new JPanel(new GridLayout(3, 0));
+    private static JPanel grid = new JPanel(new GridLayout(3, 0));
     public static Window window = new Window();
 
     public static void startWindow() {
+        grid.removeAll();
+
 
         grid.setBackground(new Color(120, 110, 255));
 
@@ -77,6 +77,7 @@ public class StartWindow {
                         return;
                     }
                     TokenChecker.writeToken(res.getResult().getAuthenticationToken());
+                    ServiceProvider.getInstance().updateToken(res.getResult().getAuthenticationToken());
                     if (Position.isAdmin(res)) {
                         window.remove(grid);
                         AdminWindow.createAdminWindow(window);

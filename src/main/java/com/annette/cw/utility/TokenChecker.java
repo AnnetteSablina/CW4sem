@@ -30,11 +30,9 @@ public class TokenChecker {
         catch (IOException ignored) {}
     }
     public static void clearFile(){
-        PrintWriter writer = null;
         try {
-            writer = new PrintWriter(tokenFile);
-        } catch (FileNotFoundException ignored) { }
-        Objects.requireNonNull(writer).print("");
-        writer.close();
+            new PrintWriter(tokenFile).close();
+        } catch (FileNotFoundException ignored) {}
+
     }
 }

@@ -1,8 +1,8 @@
-package com.annette.cw.repository;
+package com.annette.cw.service;
 
-import com.annette.cw.controller.DecisionService;
-import com.annette.cw.controller.OrganizationService;
-import com.annette.cw.controller.UserService;
+import com.annette.cw.dao.DecisionDAO;
+import com.annette.cw.dao.OrganizationDAO;
+import com.annette.cw.dao.UserDAO;
 import com.annette.cw.entity.dto.AuthenticationResponse;
 import com.annette.cw.entity.dto.LoginRequest;
 import com.annette.cw.utility.AsyncService;
@@ -16,16 +16,16 @@ import java.util.function.Consumer;
 
 public class Provider {
     private volatile static Provider instance;
-    private UserService userService;
-    private DecisionService decisionService;
-    private OrganizationService organizationService;
+    private UserDAO userDAO;
+    private DecisionDAO decisionDAO;
+    private OrganizationDAO organizationDAO;
     private AsyncService asyncService;
 
     public Provider() {
         var sp = ServiceProvider.getInstance();
-        userService = sp.getUserService();
-        decisionService = sp.getDecisionService();
-        organizationService = sp.getOrganizationService();
+        userDAO = sp.getUserDAO();
+        decisionDAO = sp.getDecisionDAO();
+        organizationDAO = sp.getOrganizationDAO();
         asyncService = sp.getService();
     }
 
@@ -42,12 +42,12 @@ public class Provider {
 
     public void logIn(String login, String password, Consumer<Result<AuthenticationResponse>> callback) {
         Call<AuthenticationResponse> call = ServiceProvider.getInstance().
-                getUserService().logIn(new LoginRequest(login, password));
+                getUserDAO().logIn(new LoginRequest(login, password));
         execute(call, callback);
     }
     public void getUserByToken(String token,Consumer<Result<AuthenticationResponse>> callback){
         ServiceProvider.getInstance().updateToken(token);
-        Call<AuthenticationResponse> call = ServiceProvider.getInstance().getUserService().getSelf(token);
+        Call<AuthenticationResponse> call = ServiceProvider.getInstance().getUserDAO().getSelf(token);
         execute(call,callback);
     }
 

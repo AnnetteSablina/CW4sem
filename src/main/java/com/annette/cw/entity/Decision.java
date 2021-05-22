@@ -18,18 +18,18 @@ public class Decision {
     private String description;
     private List<String> strategyList;
     private List<DecisionRecord> records;
-    private Organization organization;
+    private User user;
     private Instant createdDate;
     private int natureStatesCount;
     private double pessimismCoefficient;
     private final int id;
 
-    Decision(DecisionPayload payload, Organization organization, int id) {
+    Decision(DecisionPayload payload, User user, int id) {
         this.name = payload.getName();
         this.description = payload.getDescription();
         this.strategyList = payload.getStrategyList();//TODO сделай глубокое копирование
         this.records = Collections.emptyList();
-        this.organization = organization;
+        this.user = user;
         this.createdDate = payload.getCreatedDate();
         this.natureStatesCount = payload.getNatureStatesCount();
         this.id = id;

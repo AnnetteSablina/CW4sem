@@ -1,4 +1,4 @@
-package com.annette.cw.controller;
+package com.annette.cw.dao;
 
 import com.annette.cw.entity.dto.LoginRequest;
 import com.annette.cw.entity.User;
@@ -8,7 +8,7 @@ import retrofit2.http.*;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserDAO {
     @GET("users/projection")
     Call<List<User>> getUsers();
 

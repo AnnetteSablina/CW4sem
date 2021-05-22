@@ -25,4 +25,8 @@ public final class AuthInterceptor implements Interceptor {
         }
         return chain.proceed(request);
     }
+
+    public String getKey() {
+        return key;
+    }
 }

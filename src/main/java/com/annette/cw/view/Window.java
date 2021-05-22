@@ -26,7 +26,7 @@ public class Window extends JFrame {
    }
 
     public static void main(String... args) {
-        AutoEntering.autoEntering();
-       //StartWindow.startWindow();
+        //AutoEntering.autoEntering();
+       StartWindow.startWindow();
    }
 }

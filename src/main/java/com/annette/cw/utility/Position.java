@@ -1,6 +1,5 @@
 package com.annette.cw.utility;
 
-
 import com.annette.cw.entity.dto.AuthenticationResponse;
 
 public class Position {

@@ -1,4 +1,4 @@
-package com.annette.cw.controller;
+package com.annette.cw.dao;
 
 import com.annette.cw.ditch.Greeting;
 import com.annette.cw.entity.Decision;
@@ -9,7 +9,7 @@ import retrofit2.http.*;
 
 import java.util.List;
 
-public interface DecisionService {
+public interface DecisionDAO {
     @GET("/decisions")
     Call<List<Decision>> getDecisions();
 

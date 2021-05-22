@@ -1,7 +1,7 @@
 package com.annette.cw.utility;
 
 import com.annette.cw.entity.dto.AuthenticationResponse;
-import com.annette.cw.repository.Provider;
+import com.annette.cw.service.Provider;
 import com.annette.cw.view.AdminWindow;
 import com.annette.cw.view.ExceptionWindow;
 import com.annette.cw.view.StartWindow;
