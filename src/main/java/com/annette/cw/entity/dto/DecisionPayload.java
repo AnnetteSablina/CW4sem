@@ -2,7 +2,6 @@ package com.annette.cw.entity.dto;
 
 import com.annette.cw.entity.Decision;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.Instant;

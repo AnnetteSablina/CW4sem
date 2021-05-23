@@ -1,6 +1,8 @@
 package com.annette.cw.view;
 
+import com.annette.cw.service.Provider;
 import com.annette.cw.utility.AutoEntering;
+import com.annette.cw.utility.ServiceProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +11,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Window extends JFrame {
-   public Window() {
+   private volatile static  Window window;
+
+   private Window() {
         this.setTitle("CW 4 sem");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
@@ -23,10 +27,24 @@ public class Window extends JFrame {
                 System.exit(0);
             }
         });
+
    }
+    public static Window getWindow() {
+        if (window == null) {
+            synchronized (Window.class) {
+                if (window == null) {
+                    window = new Window();
+                }
+            }
+        }
+        return window;
+    }
+
 
     public static void main(String... args) {
-        //AutoEntering.autoEntering();
-       StartWindow.startWindow();
+        AutoEntering.autoEntering();
+       //StartWindow.startWindow();
+        //UserWindow.createAdminWindow();
    }
+
 }

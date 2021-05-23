@@ -16,6 +16,6 @@ public interface UserDAO {
     Call<AuthenticationResponse> logIn(@Body LoginRequest loginRequest);
 
     @GET("/users/self")
-    Call<AuthenticationResponse> getSelf(@Header("Authorization") String token);
+    Call<User> getSelf(@Header("Authorization") String token);
 
 }

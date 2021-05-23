@@ -3,10 +3,13 @@ package com.annette.cw.utility;
 import com.annette.cw.dao.DecisionDAO;
 import com.annette.cw.dao.OrganizationDAO;
 import com.annette.cw.dao.UserDAO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 public class ServiceProvider {
@@ -39,9 +42,10 @@ public class ServiceProvider {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .callTimeout(30, TimeUnit.SECONDS)
                 .build();
+        var gson = new GsonBuilder().registerTypeAdapter(Instant.class,new InstantTypeConverter());
         var retrofit = new Retrofit.Builder()
                 .baseUrl("https://cw4sem-server.herokuapp.com/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson.create()))
                 .client(client)
                 .build();
 
@@ -64,4 +68,5 @@ public class ServiceProvider {
     public void updateToken(String token) {
         interceptor.setKey(token);
     }
+
 }

@@ -1,8 +1,10 @@
 package com.annette.cw.service;
 
+import com.annette.cw.controller.Controller;
 import com.annette.cw.dao.DecisionDAO;
 import com.annette.cw.dao.OrganizationDAO;
 import com.annette.cw.dao.UserDAO;
+import com.annette.cw.entity.User;
 import com.annette.cw.entity.dto.AuthenticationResponse;
 import com.annette.cw.entity.dto.LoginRequest;
 import com.annette.cw.utility.AsyncService;
@@ -45,9 +47,9 @@ public class Provider {
                 getUserDAO().logIn(new LoginRequest(login, password));
         execute(call, callback);
     }
-    public void getUserByToken(String token,Consumer<Result<AuthenticationResponse>> callback){
+    public void getUserByToken(String token,Consumer<Result<User>> callback){
         ServiceProvider.getInstance().updateToken(token);
-        Call<AuthenticationResponse> call = ServiceProvider.getInstance().getUserDAO().getSelf(token);
+        Call<User> call = ServiceProvider.getInstance().getUserDAO().getSelf(token);
         execute(call,callback);
     }
 
@@ -63,6 +65,8 @@ public class Provider {
             } catch (IOException e) {
                 result.setServerError(true);
             } finally {
+                System.out.println("Body: " + result.getResult());
+                System.out.println("Code: " + result.getCode());
                 callback.accept(result);
             }
         });

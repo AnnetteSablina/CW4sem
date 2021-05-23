@@ -3,7 +3,6 @@ package com.annette.cw.controller;
 import com.annette.cw.entity.Decision;
 import com.annette.cw.entity.Organization;
 import com.annette.cw.entity.User;
-import com.annette.cw.utility.ServiceProvider;
 
 import java.util.List;
 
@@ -85,5 +84,14 @@ import java.util.List;
             }
         }
         return instance;
+    }
+    synchronized public void clear(){
+        this.userList = null;
+        this.changeableDecision = null;
+        this.changeableOrg = null;
+        this.changeableUser = null;
+        this.decisionList = null;
+        this.organizationList = null;
+        this.selfUser = null;
     }
 }

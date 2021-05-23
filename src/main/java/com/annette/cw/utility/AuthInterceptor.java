@@ -18,12 +18,13 @@ public final class AuthInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
+        Request newRequest;
         if (!(key == null || key.isEmpty())){
             Headers header = new Headers.Builder().add("Authorization",key).build();
-            Request newRequest = request.newBuilder().headers(header).build();
+            newRequest = request.newBuilder().headers(header).build();
             return chain.proceed(newRequest);
-        }
-        return chain.proceed(request);
+        } else newRequest = request;
+        return chain.proceed(newRequest);
     }
 
     public String getKey() {

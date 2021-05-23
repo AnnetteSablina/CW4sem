@@ -1,5 +1,7 @@
 package com.annette.cw.view;
 
+import com.annette.cw.controller.Controller;
+import com.annette.cw.entity.User;
 import com.annette.cw.entity.dto.AuthenticationResponse;
 import com.annette.cw.service.Provider;
 import com.annette.cw.utility.*;
@@ -11,11 +13,9 @@ public class StartWindow {
 
     private static JPanel controlPanel; // для соединения всех частей кнопки + текст + поля
     private static JPanel grid = new JPanel(new GridLayout(3, 0));
-    public static Window window = new Window();
 
     public static void startWindow() {
         grid.removeAll();
-
 
         grid.setBackground(new Color(120, 110, 255));
 
@@ -37,12 +37,12 @@ public class StartWindow {
         grid.add(controlPanel);
         grid.add(statusLabel);
 
-        window.add(grid);
-        window.setVisible(true);
-        StartWindow.enterLogPass(window);
+        Window.getWindow().add(grid);
+        Window.getWindow().setVisible(true);
+        StartWindow.enterLogPass();
     }
 
-    private static void enterLogPass(Window window) {
+    private static void enterLogPass() {
         JLabel nameLabel = new JLabel("Логин пользователя: ");
         JLabel passwordLabel = new JLabel("Пароль: ", JLabel.CENTER);
 
@@ -59,7 +59,7 @@ public class StartWindow {
         controlPanel.add(passwordText);
 
         controlPanel.add(loginButton);
-        window.setVisible(true);
+        Window.getWindow().setVisible(true);
     }
 
 
@@ -78,19 +78,24 @@ public class StartWindow {
                     }
                     TokenChecker.writeToken(res.getResult().getAuthenticationToken());
                     ServiceProvider.getInstance().updateToken(res.getResult().getAuthenticationToken());
-                    if (Position.isAdmin(res)) {
-                        window.remove(grid);
-                        AdminWindow.createAdminWindow(window);
-                        return;
-                    }
-                    window.remove(grid);
+                    Provider.getInstance().getUserByToken(res.getResult().getAuthenticationToken(), (Result<User> user) -> {
+                        Controller.getInstance().setSelfUser(user.getResult());
+                        if (Position.isAdmin(user)) {
+                            Window.getWindow().remove(grid);
+                            UserWindow.createAdminWindow();
+                        }
 
-                    //AdminWindow.createAdminWindow(window);//окно юзера
+                    });
+
+                    Window.getWindow().remove(grid);
+
+                    //UserWindow.createAdminWindow(window);//окно юзера
 
                 }
         );
 
     }
+
 }
 
     /*public static void newWindow(Window window) {
