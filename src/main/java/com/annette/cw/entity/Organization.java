@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.SneakyThrows;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Builder
@@ -17,7 +15,7 @@ import java.util.List;
 public class Organization implements Cloneable {
     private String name;
     private String type;
-    private final int id;
+    private final Integer id;
     private Instant createdDate = Instant.now();
     private int employeeCount;
 

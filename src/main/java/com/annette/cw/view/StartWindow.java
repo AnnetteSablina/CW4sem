@@ -5,6 +5,7 @@ import com.annette.cw.entity.User;
 import com.annette.cw.entity.dto.AuthenticationResponse;
 import com.annette.cw.service.Provider;
 import com.annette.cw.utility.*;
+import com.annette.cw.view.utility.WindowFunction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,31 +15,28 @@ public class StartWindow {
     private static JPanel controlPanel; // для соединения всех частей кнопки + текст + поля
     private static JPanel grid = new JPanel(new GridLayout(3, 0));
 
+    public static JPanel getGrid() {
+        return grid;
+    }
+
     public static void startWindow() {
         grid.removeAll();
-
         grid.setBackground(new Color(120, 110, 255));
 
-        /* Font + Authorization */
-        // подпись "Авторизация"
         JLabel headerLabel = new JLabel("Авторизация", JLabel.CENTER);
         Font font = new Font(null, Font.PLAIN, 25);
         headerLabel.setFont(font);
 
-        /*установка параметров для панели и */
-        // для получения сообщений
         JLabel statusLabel = new JLabel("", JLabel.CENTER);
 
         controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         controlPanel.setBackground(new Color(120, 110, 255));
 
-
         grid.add(headerLabel);
         grid.add(controlPanel);
         grid.add(statusLabel);
 
-        Window.getWindow().add(grid);
-        Window.getWindow().setVisible(true);
+        WindowFunction.util(getGrid());
         StartWindow.enterLogPass();
     }
 
@@ -62,29 +60,27 @@ public class StartWindow {
         Window.getWindow().setVisible(true);
     }
 
-
     private static void checkLogPass(JTextField userLogin, JPasswordField password) {
         Provider.getInstance().logIn(userLogin.getText(), new String(password.getPassword()),
                 (Result<AuthenticationResponse> res) -> {
-                   ExceptionWindow.makeLabel(res,"Такой комбинации логина и пароля не сущетвует");
-                    TokenChecker.writeToken(res.getResult().getAuthenticationToken());
-                    ServiceProvider.getInstance().updateToken(res.getResult().getAuthenticationToken());
-                    Provider.getInstance().getUserByToken(res.getResult().getAuthenticationToken(), (Result<User> user) -> {
-                        Controller.getInstance().setSelfUser(user.getResult());
-                        if (Position.isAdmin(user)) {
-                            Window.getWindow().remove(grid);
-                            UserWindow.createAdminWindow();
-                        }
+                    ExceptionWindow.makeLabel(res, "Такой комбинации логина и пароля нет");
+                    if (res.getResult() != null) {
+                        TokenChecker.writeToken(res.getResult().getAuthenticationToken());
+                        ServiceProvider.getInstance().updateToken(res.getResult().getAuthenticationToken());
+                        Provider.getInstance().getUserByToken(res.getResult().getAuthenticationToken(), (Result<User> user) -> {
+                            Controller.getInstance().setSelfUser(user.getResult());
+                            if (Position.isAdmin(user)) {
+                                Window.getWindow().remove(grid);
+                                UserWindow.createAdminWindow();
+                            } else {
+                                Window.getWindow().remove(grid);
+                                UserWindow.createUserWindow();
+                            }
 
-                    });
-
-                    Window.getWindow().remove(grid);
-
-                    //UserWindow.createAdminWindow(window);//окно юзера
-
+                        });
+                    }
                 }
         );
-
     }
 
 }

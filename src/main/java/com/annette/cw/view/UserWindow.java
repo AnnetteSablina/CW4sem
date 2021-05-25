@@ -1,6 +1,7 @@
 package com.annette.cw.view;
 
 import com.annette.cw.view.utility.UserWindowNavigation;
+import com.annette.cw.view.utility.WindowFunction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,17 +21,15 @@ public class UserWindow {
     }
 
     public static void createAdminWindow() {
+        panel.removeAll();
         createAdminUI();
-        Window.getWindow().add(panel);
-        Window.getWindow().repaint();
-        Window.getWindow().setVisible(true);
+        WindowFunction.util(panel);
     }
 
     public static void createUserWindow() {
+        panel.removeAll();
         createUserUI();
-        Window.getWindow().add(panel);
-        Window.getWindow().repaint();
-        Window.getWindow().setVisible(true);
+        WindowFunction.util(panel);
     }
 
     private static void addButton(String caption, ActionListener actionListener) {

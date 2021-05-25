@@ -57,7 +57,7 @@ public class Provider {
     }
 
     public void updateCurrentUser(String userName, String password, String email, String name, String surname,
-                                  int organizationId, Consumer<Result<User>> callback) {
+                                  Integer organizationId, Consumer<Result<User>> callback) {
         Call<User> call = ServiceProvider.getInstance().getUserDAO().updateCurrentUser(
                 new UserPayload(userName,password,email,name,surname,organizationId));
         execute(call,callback);
@@ -78,7 +78,10 @@ public class Provider {
                     return;
                 }
                 if (res.body() == null) result.setServerError(true);
-                if (res.code() == 200) result.setResult(res.body());
+                if (res.code() == 200) { result.setObjectExist(true);
+                result.setResult(res.body());
+                result.setSuccess(true);
+                }
             } catch (IOException e) {
                 result.setServerError(true);
             } finally {

@@ -14,7 +14,7 @@ public class UserPayload {
     private String email;
     private String firstName;
     private String lastName;
-    private int organizationId;
+    private Integer organizationId;
 
     public UserPayload(User user) {
         this.username = user.getUsername();

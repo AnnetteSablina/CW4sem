@@ -1,11 +1,13 @@
 package com.annette.cw.view;
 
+import com.annette.cw.controller.Controller;
 import com.annette.cw.entity.Organization;
 import com.annette.cw.entity.User;
 import com.annette.cw.service.Provider;
 import com.annette.cw.utility.Result;
 import com.annette.cw.utility.Searcher;
 import com.annette.cw.utility.TokenChecker;
+import com.annette.cw.view.utility.WindowFunction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,25 +27,44 @@ public class LogInWindow {
 
     static {
         panel.setBackground(new Color(120, 110, 255));
-        LogInWindow.panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30));
+        LogInWindow.panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 25));
     }
 
     public static JPanel getPanel() {
         return panel;
     }
 
+    public static ArrayList<JTextField> getFields() {
+        return fields;
+    }
+
+    public static ArrayList<JPasswordField> getPassFields() {
+        return passFields;
+    }
+
+    public static Map<Integer, String> getOrganization() {
+        return organization;
+    }
+
+    public static void clearAllFields() {
+        fields.clear();
+        passFields.clear();
+        org.clear();
+        organization.clear();
+    }
+
     public static void createCurrentUserWindow() {
+        panel.removeAll();
+        clearAllFields();
         drawUserUI();
         changeCurrentUserUI();
-        Window.getWindow().add(panel);
-        Window.getWindow().repaint();
-        Window.getWindow().setVisible(true);
+        WindowFunction.util(getPanel());
     }
 
     public static void createUserChangeWindow() {
+        panel.removeAll();
         drawUserUI();
     }
-
 
     private static void addTextField(String description, boolean isPasswordField) {
         JPanel compPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
@@ -69,26 +90,24 @@ public class LogInWindow {
     }
 
     private static void updateTextFields(User currentUser) {
-        fields.get(0).setText(currentUser.getUsername());
-        fields.get(1).setText(currentUser.getEmail());
-        fields.get(2).setText(currentUser.getFirstName());
-        fields.get(3).setText(currentUser.getLastName());
+        if (currentUser != null) {
+            fields.get(0).setText(currentUser.getUsername());
+            fields.get(1).setText(currentUser.getEmail());
+            fields.get(2).setText(currentUser.getFirstName());
+            fields.get(3).setText(currentUser.getLastName());
+        }
     }
 
     private static void updateComboBox(List<Organization> organizations, User user) {
-        int i = 0;
-        for (Organization org : organizations) {
-            organization.put(org.getId(), org.getName());
-        }
-        int pos = 0;
-        for (Map.Entry<Integer, String> map : organization.entrySet()) {
-            if (map.getValue().equals(user.getOrganization().getName())) {
-                pos = i;
+        if (organizations != null && user != null) {
+            for (Organization org : organizations) {
+                organization.put(org.getId(), org.getName());
             }
-            org.get(0).insertItemAt(map.getValue(), org.get(0).getItemCount());
-            i++;
+            organization.put(-1, "Не выбрано");
+            Integer pos = 0;
+            pos = getCurrentPos(user,pos);
+            org.get(0).setSelectedIndex(pos);
         }
-        org.get(0).setSelectedIndex(pos);
     }
 
     private static void addButton(String caption, ActionListener actionListener) {
@@ -98,6 +117,20 @@ public class LogInWindow {
         button.addActionListener(actionListener);
         button.setBackground(new Color(130, 240, 210));
         LogInWindow.panel.add(button);
+    }
+
+    private static Integer getCurrentPos(User user, Integer pos){
+        int i = 0;
+        for (Map.Entry<Integer, String> map : organization.entrySet()) {
+            if (user.getOrganization() != null) {
+                if (map.getValue().equals(user.getOrganization().getName())) {
+                    pos = i;
+                }
+            }
+            org.get(0).insertItemAt(map.getValue(), org.get(0).getItemCount());
+            i++;
+        }
+        return pos;
     }
 
     private static void addComboBox() {
@@ -116,7 +149,6 @@ public class LogInWindow {
     }
 
     private static void drawUserUI() {
-        panel.setBorder(BorderFactory.createTitledBorder("Регистрирование пользователя"));
         addTextField("Никнейм:", false);
         addTextField("Пароль:", true);
         addTextField("Повторите пароль:", true);
@@ -124,14 +156,19 @@ public class LogInWindow {
         addTextField("Имя:", false);
         addTextField("Фамилия:", false);
         addComboBox();
+        addButton("Назад",e->WindowFunction.returnIntoUserWindow(panel));
     }
 
     private static void changeCurrentUserUI() {
-        panel.setBorder(BorderFactory.createTitledBorder("Регистрирование пользователя"));
+        panel.setBorder(BorderFactory.createTitledBorder("Изменение текущего пользователя"));
         Provider.getInstance().getUserByToken(TokenChecker.readToken(), (Result<User> res)
                 -> {
             updateTextFields(res.getResult());
             Provider.getInstance().getOrganizations((Result<List<Organization>> org) -> {
+                if (org.getResult() == null) {
+                    ExceptionWindow.makeLabel("Невозможно загрузить список организаций");
+                    WindowFunction.returnIntoUserWindow(getPanel());
+                }
                 updateComboBox(org.getResult(), res.getResult());
             });
 
@@ -146,24 +183,29 @@ public class LogInWindow {
     }
 
     private static void saveCurrentUserAll() {
-        int orgId = Searcher.findOrgID(organization, org.get(0).getSelectedIndex());
-        if (!fields.isEmpty() && !org.isEmpty())
-            if (passFields.isEmpty()) {
-                Provider.getInstance().updateCurrentUser(fields.get(0).getText(), null, fields.get(1).getText(),
-                        fields.get(2).getText(), fields.get(3).getText(), orgId, (Result<User> res)
-                                -> {
-                            ExceptionWindow.makeLabel(res, "Не удается обновить пользователя");
-                        });
-            } else {
-                Provider.getInstance().updateCurrentUser(fields.get(0).getText(), new String(passFields.get(0).getPassword()),
-                        fields.get(1).getText(), fields.get(2).getText(), fields.get(3).getText(), orgId,
-                        (Result<User> res) -> {
-                            ExceptionWindow.makeLabel(res, "Не удается обновить пользователя");
-
-                        });
-            }
-
-
+        Integer orgId = Searcher.findOrgID(organization, org.get(0).getSelectedIndex());
+        if (orgId == -1) orgId = null;
+        if (passFields.get(0).getPassword().length == 0) {
+            Provider.getInstance().updateCurrentUser(fields.get(0).getText(), null, fields.get(1).getText(),
+                    fields.get(2).getText(), fields.get(3).getText(), orgId, (Result<User> res)
+                            -> {
+                        ExceptionWindow.makeLabel(res, "Не удается обновить пользователя");
+                        if (res.getCode() == 200) {
+                            Controller.getInstance().setSelfUser(res.getResult());
+                            WindowFunction.returnIntoUserWindow(getPanel());
+                        }
+                    });
+        } else {
+            Provider.getInstance().updateCurrentUser(fields.get(0).getText(), new String(passFields.get(0).getPassword()),
+                    fields.get(1).getText(), fields.get(2).getText(), fields.get(3).getText(), orgId,
+                    (Result<User> res) -> {
+                        ExceptionWindow.makeLabel(res, "Не удается обновить пользователя");
+                        if (res.getCode() == 200) {
+                            Controller.getInstance().setSelfUser(res.getResult());
+                            WindowFunction.returnIntoUserWindow(getPanel());
+                        }
+                    });
+        }
     }
 
 }

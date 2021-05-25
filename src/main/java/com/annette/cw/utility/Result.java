@@ -7,7 +7,8 @@ public class Result<T> {
     private T result = null;
     private int code;
     private boolean isServerError = false;
-    private boolean isObjectExist = true;
+    private boolean isObjectExist = false;
+    private boolean isSuccess = false;
     private Exception exception = null;
     private String message;
 }
