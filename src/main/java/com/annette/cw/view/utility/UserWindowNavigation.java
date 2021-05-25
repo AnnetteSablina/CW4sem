@@ -21,7 +21,8 @@ public class UserWindowNavigation {
         LogInWindow.createCurrentUserWindow();
     }
     public static void changeUserInfo(){
-        new ChooseUserWindow();
+        ChooseUserWindow window = new ChooseUserWindow();
+        //window.dispose();
     };
 
     public static void addOrganization(){}

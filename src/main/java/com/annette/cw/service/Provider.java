@@ -62,8 +62,18 @@ public class Provider {
                 new UserPayload(userName,password,email,name,surname,organizationId));
         execute(call,callback);
     }
+    public void updateUser(String userName, String password, String email, String name, String surname,
+                           Integer organizationId,Integer userId, Consumer<Result<User>> callback) {
+        Call<User> call = ServiceProvider.getInstance().getUserDAO().updateUser(
+                new UserPayload(userName,password,email,name,surname,organizationId),userId);
+        execute(call,callback);
+    }
     public void getOrganizations(Consumer<Result<List<Organization>>> callback){
         Call<List<Organization>> call = ServiceProvider.getInstance().getOrganizationDAO().getOrganizations();
+        execute(call,callback);
+    }
+    public void getUsers(Consumer<Result<List<User>>> callback){
+        Call<List<User>> call = ServiceProvider.getInstance().getUserDAO().getUsers();
         execute(call,callback);
     }
 

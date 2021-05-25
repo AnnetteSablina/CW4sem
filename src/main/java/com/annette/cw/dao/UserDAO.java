@@ -10,7 +10,7 @@ import retrofit2.http.*;
 import java.util.List;
 
 public interface UserDAO {
-    @GET("users/projection")
+    @GET("/users")
     Call<List<User>> getUsers();
 
     @POST("/auth/login")

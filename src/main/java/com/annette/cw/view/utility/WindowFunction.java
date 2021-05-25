@@ -10,7 +10,6 @@ public class WindowFunction {
     public static void returnIntoUserWindow(JPanel panel){
         if (Controller.getInstance().getSelfUser().getRole().equals("ADMIN")){
             Window.getWindow().remove(panel);
-            panel.removeAll();
             UserWindow.createAdminWindow();
         }
         else {

@@ -8,6 +8,7 @@ import com.annette.cw.utility.Result;
 import com.annette.cw.utility.Searcher;
 import com.annette.cw.utility.TokenChecker;
 import com.annette.cw.view.utility.WindowFunction;
+import com.annette.cw.view.utility.WindowUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,14 +64,17 @@ public class LogInWindow {
 
     public static void createUserChangeWindow() {
         panel.removeAll();
+        clearAllFields();
         drawUserUI();
+        changeOtherUserUI();
+        WindowFunction.util(getPanel());
     }
 
     private static void addTextField(String description, boolean isPasswordField) {
         JPanel compPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
         compPanel.add(Box.createRigidArea(new Dimension(150, 0)));
         compPanel.setBackground(new Color(120, 110, 255));
-        addLabel(description, compPanel);
+        WindowUtil.addLabel(description, compPanel);
         if (!isPasswordField) {
             JTextField field = new JTextField();
             field.setPreferredSize(new Dimension(200, 30));
@@ -137,7 +141,7 @@ public class LogInWindow {
         JPanel compPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
         compPanel.add(Box.createRigidArea(new Dimension(150, 0)));
         compPanel.setBackground(new Color(120, 110, 255));
-        addLabel("Выберите организацию", compPanel);
+        WindowUtil.addLabel("Выберите организацию", compPanel);
         JComboBox<String> organizations = new JComboBox<>();
         organizations.setPreferredSize(new Dimension(200, 30));
         organizations.setBackground(new Color(130, 240, 210));
@@ -175,36 +179,48 @@ public class LogInWindow {
         });
         addButton("Сохранить", e -> LogInWindow.saveCurrentUserAll());
     }
-
-    private static void addLabel(String description, JPanel compPanel) {
-        JLabel nameLabel = new JLabel(description);
-        nameLabel.setPreferredSize(new Dimension(150, 30));
-        compPanel.add(nameLabel);
+    private static void changeOtherUserUI(){
+        panel.setBorder(BorderFactory.createTitledBorder("Изменение пользователя"));
+        updateTextFields(Controller.getInstance().getChangeableUser());
+        Provider.getInstance().getOrganizations((Result<List<Organization>> org) -> {
+            if (org.getResult() == null) {
+                ExceptionWindow.makeLabel("Невозможно загрузить список организаций");
+                WindowFunction.returnIntoUserWindow(getPanel());
+            }
+            updateComboBox(org.getResult(), Controller.getInstance().getChangeableUser());
+        });
+        addButton("Сохранить", e -> LogInWindow.saveOtherUserAll());
     }
 
     private static void saveCurrentUserAll() {
-        Integer orgId = Searcher.findOrgID(organization, org.get(0).getSelectedIndex());
+        Integer orgId = Searcher.findObjByID(organization, org.get(0).getSelectedIndex());
         if (orgId == -1) orgId = null;
         if (passFields.get(0).getPassword().length == 0) {
             Provider.getInstance().updateCurrentUser(fields.get(0).getText(), null, fields.get(1).getText(),
-                    fields.get(2).getText(), fields.get(3).getText(), orgId, (Result<User> res)
-                            -> {
-                        ExceptionWindow.makeLabel(res, "Не удается обновить пользователя");
-                        if (res.getCode() == 200) {
-                            Controller.getInstance().setSelfUser(res.getResult());
-                            WindowFunction.returnIntoUserWindow(getPanel());
-                        }
-                    });
+                    fields.get(2).getText(), fields.get(3).getText(), orgId, LogInWindow::err);
         } else {
             Provider.getInstance().updateCurrentUser(fields.get(0).getText(), new String(passFields.get(0).getPassword()),
+                    fields.get(1).getText(), fields.get(2).getText(), fields.get(3).getText(), orgId, LogInWindow::err);
+        }
+    }
+    private static void err (Result<User>res){
+        ExceptionWindow.makeLabel(res, "Не удается обновить пользователя");
+        if (res.getCode() == 200) {
+            Controller.getInstance().setSelfUser(res.getResult());
+            WindowFunction.returnIntoUserWindow(getPanel());
+        }
+    }
+    private static void saveOtherUserAll(){
+        Integer orgId = Searcher.findObjByID(organization, org.get(0).getSelectedIndex());
+        if (orgId == - 1) orgId = null;
+        if (passFields.get(0).getPassword().length == 0) {
+            Provider.getInstance().updateUser(fields.get(0).getText(), null, fields.get(1).getText(),
+                    fields.get(2).getText(), fields.get(3).getText(), orgId,Controller.getInstance().getChangeableUser().getId(),
+                    LogInWindow::err);
+        } else {
+            Provider.getInstance().updateUser(fields.get(0).getText(), new String(passFields.get(0).getPassword()),
                     fields.get(1).getText(), fields.get(2).getText(), fields.get(3).getText(), orgId,
-                    (Result<User> res) -> {
-                        ExceptionWindow.makeLabel(res, "Не удается обновить пользователя");
-                        if (res.getCode() == 200) {
-                            Controller.getInstance().setSelfUser(res.getResult());
-                            WindowFunction.returnIntoUserWindow(getPanel());
-                        }
-                    });
+                    Controller.getInstance().getChangeableUser().getId(), LogInWindow::err);
         }
     }
 

@@ -1,8 +1,6 @@
 package com.annette.cw.view;
 
-import com.annette.cw.service.Provider;
 import com.annette.cw.utility.AutoEntering;
-import com.annette.cw.utility.ServiceProvider;
 
 import javax.swing.*;
 import java.awt.*;
