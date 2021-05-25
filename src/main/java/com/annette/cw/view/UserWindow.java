@@ -3,7 +3,6 @@ package com.annette.cw.view;
 import com.annette.cw.view.utility.UserWindowNavigation;
 
 import javax.swing.*;
-import javax.xml.crypto.URIDereferencer;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -13,7 +12,7 @@ public class UserWindow {
 
     static {
         panel.setBackground(new Color(120, 110, 255));
-        UserWindow.panel.setLayout(new BoxLayout(UserWindow.panel, BoxLayout.Y_AXIS));
+        UserWindow.panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30));
     }
 
     public static JPanel getPanel() {
@@ -36,28 +35,34 @@ public class UserWindow {
 
     private static void addButton(String caption, ActionListener actionListener) {
         JButton button = new JButton(caption);
-        button.setPreferredSize(new Dimension(150, 25));
+        JPanel compPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        compPanel.setBackground(new Color(120, 110, 255));
+        compPanel.add(Box.createRigidArea(new Dimension(50,0)));
+        button.setPreferredSize(new Dimension(350,30));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(actionListener);
         button.setBackground(new Color(130, 240, 210));
-        UserWindow.panel.add(button);
-        UserWindow.panel.add(Box.createRigidArea(new Dimension(0, 25)));
+        compPanel.add(button);
+        compPanel.add(Box.createRigidArea(new Dimension(50,0)));
+        UserWindow.panel.add(compPanel);
     }
 
     private static void createAdminUI() {
         panel.setBorder(BorderFactory.createTitledBorder("Меню администратора"));
-        UserWindow.panel.add(Box.createRigidArea(new Dimension(0, 60)));
         addButton("Зарегистрировать пользователя", e -> UserWindowNavigation.logInUser());
+        addButton("Изменить свои данные",e->UserWindowNavigation.changeCurrentUserInfo());
         addButton("Изменить данные пользователя ", e -> UserWindowNavigation.changeUserInfo());
-        addButton("    Добавить организацию    ", e -> UserWindowNavigation.addOrganization());
-        addButton("    Изменить организацию    ", e -> UserWindowNavigation.changeOrganization());
+        addButton("Добавить организацию", e -> UserWindowNavigation.addOrganization());
+        addButton("Изменить организацию", e -> UserWindowNavigation.changeOrganization());
         addButton("Показать количество сотрудников в организации", e -> UserWindowNavigation.showEmployeeCount());
-        addButton("              Принять решение              ", e -> UserWindowNavigation.makeDecision());
+        addButton("Принять решение", e -> UserWindowNavigation.makeDecision());
         addButton(" Выйти из аккаунта ", e -> UserWindowNavigation.returnToStartWindow());
     }
 
     private static void createUserUI() {
         panel.setBorder(BorderFactory.createTitledBorder("Меню пользователя"));
-
+        addButton("Изменить свои данные",e->UserWindowNavigation.changeCurrentUserInfo());
+        addButton("Принять решение", e -> UserWindowNavigation.makeDecision());
+        addButton(" Выйти из аккаунта ", e -> UserWindowNavigation.returnToStartWindow());
     }
 }

@@ -66,16 +66,7 @@ public class StartWindow {
     private static void checkLogPass(JTextField userLogin, JPasswordField password) {
         Provider.getInstance().logIn(userLogin.getText(), new String(password.getPassword()),
                 (Result<AuthenticationResponse> res) -> {
-                    if (!res.isObjectExist()) {
-                        JLabel error = new JLabel("Пользователь отсутствует", JLabel.CENTER);
-                        new ExceptionWindow(error);
-                        return;
-                    }
-                    if (res.isServerError()) {
-                        JLabel error = new JLabel("Соединение с сервером отсутствует", JLabel.CENTER);
-                        new ExceptionWindow(error);
-                        return;
-                    }
+                   ExceptionWindow.makeLabel(res,"Такой комбинации логина и пароля не сущетвует");
                     TokenChecker.writeToken(res.getResult().getAuthenticationToken());
                     ServiceProvider.getInstance().updateToken(res.getResult().getAuthenticationToken());
                     Provider.getInstance().getUserByToken(res.getResult().getAuthenticationToken(), (Result<User> user) -> {

@@ -1,11 +1,23 @@
 package com.annette.cw.view;
 
+import com.annette.cw.utility.Result;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class ExceptionWindow extends JFrame {
+
+    public static <T> void makeLabel(Result<T> res,String text){
+        if (!res.isObjectExist()) {
+            JLabel error = new JLabel(text, JLabel.CENTER);
+            new ExceptionWindow(error);
+            return;
+        }
+        if (res.isServerError()) {
+            JLabel error = new JLabel("Соединение с сервером отсутствует", JLabel.CENTER);
+            new ExceptionWindow(error);
+        }
+    }
 
     public ExceptionWindow (JLabel label){
         this.setTitle("Error");

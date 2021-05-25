@@ -1,6 +1,5 @@
 package com.annette.cw.entity;
 
-import com.annette.cw.entity.Decision;
 import lombok.Data;
 
 import java.time.Instant;
@@ -13,7 +12,4 @@ public class DecisionRecord {
     private Decision decision;
     private long id;
     private final Instant createdDate= Instant.now();
-
-
-
 }
