@@ -1,8 +1,7 @@
 package com.annette.cw.dao;
 
-import com.annette.cw.ditch.Greeting;
+
 import com.annette.cw.entity.Decision;
-import com.annette.cw.entity.dto.AuthenticationResponse;
 import com.annette.cw.entity.dto.DecisionPayload;
 import retrofit2.Call;
 import retrofit2.http.*;

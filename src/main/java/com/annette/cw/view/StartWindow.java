@@ -27,14 +27,19 @@ public class StartWindow {
         Font font = new Font(null, Font.PLAIN, 25);
         headerLabel.setFont(font);
 
-        JLabel statusLabel = new JLabel("", JLabel.CENTER);
+        JPanel signUpLabel = new JPanel(new FlowLayout(FlowLayout.CENTER,250,0));
+        signUpLabel.setBackground(new Color(120, 110, 255));
+
+        JButton button = new JButton("Зарегистрироваться");
+        button.addActionListener(e->signUp());
+        signUpLabel.add(button);
 
         controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         controlPanel.setBackground(new Color(120, 110, 255));
 
         grid.add(headerLabel);
         grid.add(controlPanel);
-        grid.add(statusLabel);
+        grid.add(signUpLabel);
 
         WindowFunction.util(getGrid());
         StartWindow.enterLogPass();
@@ -81,6 +86,11 @@ public class StartWindow {
                     }
                 }
         );
+    }
+    private static void signUp(){
+        grid.removeAll();
+        Window.getWindow().remove(grid);
+        LogInWindow.createLogInWindow();
     }
 
 }

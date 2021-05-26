@@ -9,9 +9,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Window extends JFrame {
-   private volatile static  Window window;
+    private volatile static Window window;
 
-   private Window() {
+    private Window() {
         this.setTitle("CW 4 sem");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
@@ -26,7 +26,8 @@ public class Window extends JFrame {
             }
         });
 
-   }
+    }
+
     public static Window getWindow() {
         if (window == null) {
             synchronized (Window.class) {
@@ -41,8 +42,8 @@ public class Window extends JFrame {
 
     public static void main(String... args) {
         AutoEntering.autoEntering();
-       //StartWindow.startWindow();
+        //StartWindow.startWindow();
         //UserWindow.createAdminWindow();
-   }
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.annette.cw.utility;
 
 import com.annette.cw.controller.Controller;
+import com.annette.cw.entity.Decision;
 import com.annette.cw.entity.User;
 
 import java.util.List;
@@ -15,11 +16,19 @@ public class Searcher {
         }
         return 0;
     }
-    public static User findUserBuID(int id){
+    public static User findUserByID(int id){
         List<User> users = Controller.getInstance().getUserList();
         for (User user:users){
             if (user.getId() == id) return user;
         }
         return null;
     }
+    public static Decision findDecisionById(int id){
+        List<Decision> decisions = Controller.getInstance().getDecisionList();
+        for(Decision decision:decisions){
+            if (decision.getId() == id) return decision;
+        }
+        return null;
+    }
+
 }

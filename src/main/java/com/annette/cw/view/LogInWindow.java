@@ -3,7 +3,9 @@ package com.annette.cw.view;
 import com.annette.cw.controller.Controller;
 import com.annette.cw.entity.Organization;
 import com.annette.cw.entity.User;
+import com.annette.cw.entity.dto.AuthenticationResponse;
 import com.annette.cw.service.Provider;
+import com.annette.cw.utility.AutoEntering;
 import com.annette.cw.utility.Result;
 import com.annette.cw.utility.Searcher;
 import com.annette.cw.utility.TokenChecker;
@@ -70,6 +72,14 @@ public class LogInWindow {
         WindowFunction.util(getPanel());
     }
 
+    public static void createLogInWindow() {
+        panel.removeAll();
+        clearAllFields();
+        drawUserUI();
+        changeLogInUserUI();
+        WindowFunction.util(getPanel());
+    }
+
     private static void addTextField(String description, boolean isPasswordField) {
         JPanel compPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
         compPanel.add(Box.createRigidArea(new Dimension(150, 0)));
@@ -109,8 +119,21 @@ public class LogInWindow {
             }
             organization.put(-1, "Не выбрано");
             Integer pos = 0;
-            pos = getCurrentPos(user,pos);
+            pos = getCurrentPos(user, pos);
             org.get(0).setSelectedIndex(pos);
+        }
+    }
+
+    private static void updateComboBox(List<Organization> organizations) {
+        if (organizations != null) {
+            for (Organization org : organizations) {
+                organization.put(org.getId(), org.getName());
+            }
+            organization.put(-1, "Не выбрано");
+            for (Map.Entry<Integer, String> map : organization.entrySet()) {
+                org.get(0).insertItemAt(map.getValue(), org.get(0).getItemCount());
+            }
+            org.get(0).setSelectedIndex(0);
         }
     }
 
@@ -123,7 +146,7 @@ public class LogInWindow {
         LogInWindow.panel.add(button);
     }
 
-    private static Integer getCurrentPos(User user, Integer pos){
+    private static Integer getCurrentPos(User user, Integer pos) {
         int i = 0;
         for (Map.Entry<Integer, String> map : organization.entrySet()) {
             if (user.getOrganization() != null) {
@@ -160,7 +183,8 @@ public class LogInWindow {
         addTextField("Имя:", false);
         addTextField("Фамилия:", false);
         addComboBox();
-        addButton("Назад",e->WindowFunction.returnIntoUserWindow(panel));
+        if (TokenChecker.isFileEmpty()) addButton("Назад",e->returnToStartWindow());
+        else addButton("Назад", e -> WindowFunction.returnIntoUserWindow(panel));
     }
 
     private static void changeCurrentUserUI() {
@@ -179,17 +203,32 @@ public class LogInWindow {
         });
         addButton("Сохранить", e -> LogInWindow.saveCurrentUserAll());
     }
-    private static void changeOtherUserUI(){
+
+    private static void changeOtherUserUI() {
         panel.setBorder(BorderFactory.createTitledBorder("Изменение пользователя"));
         updateTextFields(Controller.getInstance().getChangeableUser());
         Provider.getInstance().getOrganizations((Result<List<Organization>> org) -> {
             if (org.getResult() == null) {
                 ExceptionWindow.makeLabel("Невозможно загрузить список организаций");
                 WindowFunction.returnIntoUserWindow(getPanel());
+                return;
             }
             updateComboBox(org.getResult(), Controller.getInstance().getChangeableUser());
         });
         addButton("Сохранить", e -> LogInWindow.saveOtherUserAll());
+    }
+
+    private static void changeLogInUserUI() {
+        panel.setBorder(BorderFactory.createTitledBorder("Регистрация пользователя"));
+        Provider.getInstance().getOrganizations((Result<List<Organization>> org) -> {
+            if (org.getResult() == null) {
+                ExceptionWindow.makeLabel("Невозможно загрузить список организаций");
+                WindowFunction.returnIntoUserWindow(getPanel());
+                return;
+            }
+            updateComboBox(org.getResult());
+        });
+        addButton("Завершить регистрацию", e -> LogInWindow.saveLogInUserAll());
     }
 
     private static void saveCurrentUserAll() {
@@ -203,19 +242,23 @@ public class LogInWindow {
                     fields.get(1).getText(), fields.get(2).getText(), fields.get(3).getText(), orgId, LogInWindow::err);
         }
     }
-    private static void err (Result<User>res){
+
+    private static void err(Result<User> res) {
         ExceptionWindow.makeLabel(res, "Не удается обновить пользователя");
+        if (res.getCode() == 400) {
+            ExceptionWindow.makeLabel(res, "Ошибка ввода данных");
+        }
         if (res.getCode() == 200) {
-            Controller.getInstance().setSelfUser(res.getResult());
             WindowFunction.returnIntoUserWindow(getPanel());
         }
     }
-    private static void saveOtherUserAll(){
+
+    private static void saveOtherUserAll() {
         Integer orgId = Searcher.findObjByID(organization, org.get(0).getSelectedIndex());
-        if (orgId == - 1) orgId = null;
+        if (orgId == -1) orgId = null;
         if (passFields.get(0).getPassword().length == 0) {
             Provider.getInstance().updateUser(fields.get(0).getText(), null, fields.get(1).getText(),
-                    fields.get(2).getText(), fields.get(3).getText(), orgId,Controller.getInstance().getChangeableUser().getId(),
+                    fields.get(2).getText(), fields.get(3).getText(), orgId, Controller.getInstance().getChangeableUser().getId(),
                     LogInWindow::err);
         } else {
             Provider.getInstance().updateUser(fields.get(0).getText(), new String(passFields.get(0).getPassword()),
@@ -224,4 +267,39 @@ public class LogInWindow {
         }
     }
 
+    private static void saveLogInUserAll() {
+        Integer orgId = Searcher.findObjByID(organization, org.get(0).getSelectedIndex());
+        if (orgId == -1) orgId = null;
+        Provider.getInstance().signUp(fields.get(0).getText(), new String(passFields.get(0).getPassword()),
+                fields.get(1).getText(), fields.get(2).getText(), fields.get(3).getText(), orgId,
+                (Result<AuthenticationResponse> res) -> {
+                    ExceptionWindow.makeLabel(res, "Не удается зарегистрировать пользователя");
+                    if (res.getCode() == 400) {
+                        ExceptionWindow.makeLabel(res, "Ошибка ввода данных");
+                    }
+                    if (res.getCode() == 200) {
+                        if (Controller.getInstance().getSelfUser() != null &&
+                                Controller.getInstance().getSelfUser().getRole().equals("ADMIN")) {
+                            WindowFunction.returnIntoUserWindow(getPanel());
+                        } else {
+                            if (TokenChecker.isFileEmpty()) {
+                                TokenChecker.writeToken(res.getResult().getAuthenticationToken());
+                                panel.removeAll();
+                                Window.getWindow().remove(panel);
+                                AutoEntering.autoEntering();
+                            }
+                        }
+                    }
+                }
+
+
+        );
+    }
+
+    private static void returnToStartWindow(){
+        panel.removeAll();
+        Window.getWindow().remove(panel);
+        StartWindow.startWindow();
+    }
 }
+

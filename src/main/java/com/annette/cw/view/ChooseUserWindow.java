@@ -38,7 +38,7 @@ public class ChooseUserWindow extends JFrame {
         this.setVisible(true);
     }
 
-    private static void clearAll(){
+    private static void clearAll() {
         userBox.clear();
         userMap.clear();
     }
@@ -51,9 +51,9 @@ public class ChooseUserWindow extends JFrame {
         return panel;
     }
 
-    private static void drawUI() {
+    private void drawUI() {
         addComboBox();
-        addButton("Назад", e -> WindowFunction.returnIntoUserWindow(panel));
+        addButton("Назад", e ->comeBack());
         addButton("Подтвердить", e -> selectCurrentUser());
     }
 
@@ -103,16 +103,23 @@ public class ChooseUserWindow extends JFrame {
 
     }
 
-    private static void selectCurrentUser(){
+    private void selectCurrentUser() {
         int userId = Searcher.findObjByID(userMap, userBox.get(0).getSelectedIndex());
-        Controller.getInstance().setChangeableUser(Searcher.findUserBuID(userId));
+        Controller.getInstance().setChangeableUser(Searcher.findUserByID(userId));
+        this.dispose();
         Window.getWindow().remove(UserWindow.getPanel());
         LogInWindow.createUserChangeWindow();
     }
-    private static void insertValues(){
+
+    private static void insertValues() {
         for (Map.Entry<Integer, String> map : userMap.entrySet()) {
             userBox.get(0).insertItemAt(map.getValue(), userBox.get(0).getItemCount());
         }
+    }
+
+    private void comeBack() {
+        this.dispose();
+        WindowFunction.returnIntoUserWindow(panel);
     }
 }
 

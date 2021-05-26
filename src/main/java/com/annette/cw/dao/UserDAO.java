@@ -25,5 +25,9 @@ public interface UserDAO {
     @POST("/users/update/self")
     Call<User> updateCurrentUser(@Body UserPayload payload);
 
+    @POST("/auth/signup")
+    Call<AuthenticationResponse> signUp(@Body UserPayload userPayload);
 
+    @GET("/users/{id}")
+    Call<User> getUser(@Path("id") Integer id);
 }

@@ -3,6 +3,7 @@ package com.annette.cw.service;
 import com.annette.cw.dao.DecisionDAO;
 import com.annette.cw.dao.OrganizationDAO;
 import com.annette.cw.dao.UserDAO;
+import com.annette.cw.entity.Decision;
 import com.annette.cw.entity.Organization;
 import com.annette.cw.entity.User;
 import com.annette.cw.entity.dto.AuthenticationResponse;
@@ -50,6 +51,14 @@ public class Provider {
         execute(call, callback);
     }
 
+    public void signUp(String userName, String password, String email, String name, String surname,
+                       Integer organizationId, Consumer<Result<AuthenticationResponse>> callback) {
+        Call<AuthenticationResponse> call = ServiceProvider.getInstance().getUserDAO().signUp(
+                new UserPayload(userName, password, email, name, surname, organizationId));
+        execute(call, callback);
+    }
+
+
     public void getUserByToken(String token, Consumer<Result<User>> callback) {
         ServiceProvider.getInstance().updateToken(token);
         Call<User> call = ServiceProvider.getInstance().getUserDAO().getSelf(token);
@@ -59,22 +68,29 @@ public class Provider {
     public void updateCurrentUser(String userName, String password, String email, String name, String surname,
                                   Integer organizationId, Consumer<Result<User>> callback) {
         Call<User> call = ServiceProvider.getInstance().getUserDAO().updateCurrentUser(
-                new UserPayload(userName,password,email,name,surname,organizationId));
-        execute(call,callback);
+                new UserPayload(userName, password, email, name, surname, organizationId));
+        execute(call, callback);
     }
+
     public void updateUser(String userName, String password, String email, String name, String surname,
-                           Integer organizationId,Integer userId, Consumer<Result<User>> callback) {
+                           Integer organizationId, Integer userId, Consumer<Result<User>> callback) {
         Call<User> call = ServiceProvider.getInstance().getUserDAO().updateUser(
-                new UserPayload(userName,password,email,name,surname,organizationId),userId);
-        execute(call,callback);
+                new UserPayload(userName, password, email, name, surname, organizationId), userId);
+        execute(call, callback);
     }
-    public void getOrganizations(Consumer<Result<List<Organization>>> callback){
+
+    public void getOrganizations(Consumer<Result<List<Organization>>> callback) {
         Call<List<Organization>> call = ServiceProvider.getInstance().getOrganizationDAO().getOrganizations();
-        execute(call,callback);
+        execute(call, callback);
     }
-    public void getUsers(Consumer<Result<List<User>>> callback){
+
+    public void getUsers(Consumer<Result<List<User>>> callback) {
         Call<List<User>> call = ServiceProvider.getInstance().getUserDAO().getUsers();
-        execute(call,callback);
+        execute(call, callback);
+    }
+    public void getDecisions(Consumer<Result<List<Decision>>> callback) {
+        Call<List<Decision>> call = ServiceProvider.getInstance().getDecisionDAO().getDecisions();
+        execute(call, callback);
     }
 
     private <T> void execute(Call<T> call, Consumer<Result<T>> callback) {
@@ -83,14 +99,15 @@ public class Provider {
             try {
                 Response<T> res = call.execute();
                 result.setCode(res.code());
-                if (res.code() == 403) {
+                if (res.code() == 403 || res.code() == 400) {
                     result.setObjectExist(false);
                     return;
                 }
                 if (res.body() == null) result.setServerError(true);
-                if (res.code() == 200) { result.setObjectExist(true);
-                result.setResult(res.body());
-                result.setSuccess(true);
+                if (res.code() == 200) {
+                    result.setObjectExist(true);
+                    result.setResult(res.body());
+                    result.setSuccess(true);
                 }
             } catch (IOException e) {
                 result.setServerError(true);

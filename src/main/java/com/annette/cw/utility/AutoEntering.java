@@ -9,8 +9,7 @@ import com.annette.cw.view.UserWindow;
 public class AutoEntering {
     public static void autoEntering(){
         if (TokenChecker.isFileEmpty()) StartWindow.startWindow();
-        else Provider.getInstance().getUserByToken(TokenChecker.readToken(),(Result<User> res)
-                -> {
+        else Provider.getInstance().getUserByToken(TokenChecker.readToken(),(Result<User> res) -> {
             if (res.getResult() == null){
                 TokenChecker.clearFile();
                 StartWindow.startWindow();
