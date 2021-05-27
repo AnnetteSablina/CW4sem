@@ -30,21 +30,25 @@ public class UserWindowNavigation {
     }
 
     public static void addOrganization() {
+        UserWindow.getPanel().removeAll();
+        Window.getWindow().remove(UserWindow.getPanel());
+        System.out.println("lol");
+        OrganizationWindow.createAddOrgWindow();
     }
 
     public static void changeOrganization() {
+        UserWindow.getPanel().removeAll();
+        Window.getWindow().remove(UserWindow.getPanel());
+        OrganizationWindow.changeOrgWindow();
     }
 
     ;
 
     public static void showEmployeeCount() {
-    }
 
-    ;
+    }
 
     public static void makeDecision() {
         new ChooseDecisionWindow();
     }
-
-    ;
 }

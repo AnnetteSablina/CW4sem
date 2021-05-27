@@ -20,15 +20,14 @@ public class QuestionWindow extends JFrame {
         this.setResizable(false);
         this.setSize(600, 400);
         drawUI();
-        //changeChooseUserUI();
         this.add(panel);
         this.setVisible(true);
     }
 
     private void drawUI() {
         panel.setBorder(BorderFactory.createTitledBorder("Выбор изменения решения"));
-        addButton("Принять решение", e -> new DecisionParamWindow());
-        addButton("Редактировать решение", e -> comeBack());
+        addButton("Принять решение", e-> comeBack());
+        addButton("Редактировать решение", e -> new DecisionParamWindow());
         addButton("Назад", e -> comeBack());
 
     }

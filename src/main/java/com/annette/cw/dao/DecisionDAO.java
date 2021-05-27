@@ -15,6 +15,9 @@ public interface DecisionDAO {
     @GET("/decisions/{id}")
     Call<Decision> getDecision(@Path("id") Integer id);
 
+    @POST("/decisions/make/{id}")
+    Call<Decision> makeDecision(@Path("id") Integer id);
+
     @DELETE("/decisions/{id}")
     Call<String> deleteDecision(@Path("id") Integer id);
 

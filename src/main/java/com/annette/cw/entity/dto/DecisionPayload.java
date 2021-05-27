@@ -9,22 +9,21 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-
 public class DecisionPayload {
     private String name;
     private String description;
     private List<String> strategyList;
-    private int natureStatesCount;
-    private int userId;
+    private Integer natureStatesCount;
+    private int id;
     private Instant createdDate;
     private double pessimismCoefficient;
 
-    DecisionPayload(Decision decision) {
+   public DecisionPayload(Decision decision) {
         this.name = decision.getName();
         this.description = decision.getDescription();
-        this.strategyList = decision.getStrategyList(); //TODO сделай глубокое копирование
+        this.strategyList = decision.getStrategyList();
         this.natureStatesCount = decision.getNatureStatesCount();
-        this.userId = decision.getId();
+        this.id = decision.getId();
         this.createdDate = decision.getCreatedDate();
         this.pessimismCoefficient = decision.getPessimismCoefficient();
     }

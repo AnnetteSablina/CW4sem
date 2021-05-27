@@ -1,14 +1,13 @@
 package com.annette.cw.service;
 
+import com.annette.cw.controller.Controller;
 import com.annette.cw.dao.DecisionDAO;
 import com.annette.cw.dao.OrganizationDAO;
 import com.annette.cw.dao.UserDAO;
 import com.annette.cw.entity.Decision;
 import com.annette.cw.entity.Organization;
 import com.annette.cw.entity.User;
-import com.annette.cw.entity.dto.AuthenticationResponse;
-import com.annette.cw.entity.dto.LoginRequest;
-import com.annette.cw.entity.dto.UserPayload;
+import com.annette.cw.entity.dto.*;
 import com.annette.cw.utility.AsyncService;
 import com.annette.cw.utility.Result;
 import com.annette.cw.utility.ServiceProvider;
@@ -18,6 +17,7 @@ import retrofit2.Response;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
+
 
 public class Provider {
     private volatile static Provider instance;
@@ -79,8 +79,23 @@ public class Provider {
         execute(call, callback);
     }
 
+    public void updateOrganization(String name,String type,Integer id,Consumer<Result<Organization>> callback){
+        Call<Organization> call = ServiceProvider.getInstance().getOrganizationDAO().
+                updateOrganization(new OrganizationPayload(name,type),id);
+        execute(call,callback);
+    }
+    public void addOrganization(String name,String type,Consumer<Result<Organization>> callback){
+        Call<Organization> call = ServiceProvider.getInstance().getOrganizationDAO().
+                addOrganization(new OrganizationPayload(name,type));
+        execute(call,callback);
+    }
+
     public void getOrganizations(Consumer<Result<List<Organization>>> callback) {
         Call<List<Organization>> call = ServiceProvider.getInstance().getOrganizationDAO().getOrganizations();
+        execute(call, callback);
+    }
+    public void getOrganization(Integer id,Consumer<Result<Organization>> callback){
+        Call<Organization> call = ServiceProvider.getInstance().getOrganizationDAO().getOrganization(id);
         execute(call, callback);
     }
 
@@ -88,9 +103,22 @@ public class Provider {
         Call<List<User>> call = ServiceProvider.getInstance().getUserDAO().getUsers();
         execute(call, callback);
     }
+
     public void getDecisions(Consumer<Result<List<Decision>>> callback) {
         Call<List<Decision>> call = ServiceProvider.getInstance().getDecisionDAO().getDecisions();
         execute(call, callback);
+    }
+    public void makeDecisionById(Integer id, Consumer<Result<Decision>> callback) {
+        Call<Decision> call = ServiceProvider.getInstance().getDecisionDAO().makeDecision(id);
+        execute(call, callback);
+    }
+    public void updateDecisionById(String name,List<String>strategyList,Integer natureStates,Integer id, Consumer<Result<Decision>> callback){
+        Call<Decision> call = ServiceProvider.getInstance().getDecisionDAO().
+                updateDecision(new DecisionPayload(name,null,strategyList,natureStates,id,
+                        Controller.getInstance().getChangeableDecision().getCreatedDate(),
+                        Controller.getInstance().getChangeableDecision().getPessimismCoefficient()),id);
+        System.out.println(call);
+        execute(call,callback);
     }
 
     private <T> void execute(Call<T> call, Consumer<Result<T>> callback) {

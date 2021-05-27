@@ -37,18 +37,6 @@ public class LogInWindow {
         return panel;
     }
 
-    public static ArrayList<JTextField> getFields() {
-        return fields;
-    }
-
-    public static ArrayList<JPasswordField> getPassFields() {
-        return passFields;
-    }
-
-    public static Map<Integer, String> getOrganization() {
-        return organization;
-    }
-
     public static void clearAllFields() {
         fields.clear();
         passFields.clear();
@@ -197,6 +185,7 @@ public class LogInWindow {
                     ExceptionWindow.makeLabel("Невозможно загрузить список организаций");
                     WindowFunction.returnIntoUserWindow(getPanel());
                 }
+                Controller.getInstance().setOrganizationList(org.getResult());
                 updateComboBox(org.getResult(), res.getResult());
             });
 

@@ -116,7 +116,6 @@ public class ChooseDecisionWindow extends JFrame {
        else {
            new QuestionWindow();
        }
-       //LogInWindow.createUserChangeWindow();
    }
     private static void insertValues() {
         for (Map.Entry<Integer, String> map : decisionMap.entrySet()) {

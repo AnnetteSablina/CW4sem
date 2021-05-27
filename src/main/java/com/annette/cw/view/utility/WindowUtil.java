@@ -9,4 +9,5 @@ public class WindowUtil {
         nameLabel.setPreferredSize(new Dimension(200, 30));
         compPanel.add(nameLabel);
     }
+
 }
