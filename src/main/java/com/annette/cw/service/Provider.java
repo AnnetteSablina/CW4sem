@@ -15,6 +15,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -79,22 +80,24 @@ public class Provider {
         execute(call, callback);
     }
 
-    public void updateOrganization(String name,String type,Integer id,Consumer<Result<Organization>> callback){
+    public void updateOrganization(String name, String type, Integer id, Consumer<Result<Organization>> callback) {
         Call<Organization> call = ServiceProvider.getInstance().getOrganizationDAO().
-                updateOrganization(new OrganizationPayload(name,type),id);
-        execute(call,callback);
+                updateOrganization(new OrganizationPayload(name, type), id);
+        execute(call, callback);
     }
-    public void addOrganization(String name,String type,Consumer<Result<Organization>> callback){
+
+    public void addOrganization(String name, String type, Consumer<Result<Organization>> callback) {
         Call<Organization> call = ServiceProvider.getInstance().getOrganizationDAO().
-                addOrganization(new OrganizationPayload(name,type));
-        execute(call,callback);
+                addOrganization(new OrganizationPayload(name, type));
+        execute(call, callback);
     }
 
     public void getOrganizations(Consumer<Result<List<Organization>>> callback) {
         Call<List<Organization>> call = ServiceProvider.getInstance().getOrganizationDAO().getOrganizations();
         execute(call, callback);
     }
-    public void getOrganization(Integer id,Consumer<Result<Organization>> callback){
+
+    public void getOrganization(Integer id, Consumer<Result<Organization>> callback) {
         Call<Organization> call = ServiceProvider.getInstance().getOrganizationDAO().getOrganization(id);
         execute(call, callback);
     }
@@ -108,16 +111,24 @@ public class Provider {
         Call<List<Decision>> call = ServiceProvider.getInstance().getDecisionDAO().getDecisions();
         execute(call, callback);
     }
+
     public void makeDecisionById(Integer id, Consumer<Result<Decision>> callback) {
         Call<Decision> call = ServiceProvider.getInstance().getDecisionDAO().makeDecision(id);
         execute(call, callback);
     }
-    public void updateDecisionById(String name,List<String>strategyList,Integer natureStates,Integer id, Consumer<Result<Decision>> callback){
+
+    public void updateDecisionById(String name, List<String> strategyList, Integer natureStates,Double coefficient,
+                                   Integer id, Consumer<Result<Decision>> callback) {
         Call<Decision> call = ServiceProvider.getInstance().getDecisionDAO().
-                updateDecision(new DecisionPayload(name,null,strategyList,natureStates,id,
-                        Controller.getInstance().getChangeableDecision().getCreatedDate(),
-                        Controller.getInstance().getChangeableDecision().getPessimismCoefficient()),id);
+                updateDecision(new DecisionPayload(name, "", strategyList, natureStates,coefficient, id,
+                        Controller.getInstance().getChangeableDecision().getCreatedDate()) , id);
         System.out.println(call);
+        execute(call, callback);
+    }
+    public void addDecision(String name, List<String> strategyList, Integer natureStates,Double coefficient, Integer id,
+                            Consumer<Result<Decision>> callback){
+        Call<Decision> call = ServiceProvider.getInstance().getDecisionDAO().addDecision(new DecisionPayload(name,"",
+                strategyList,natureStates,coefficient,id, Instant.now()));
         execute(call,callback);
     }
 

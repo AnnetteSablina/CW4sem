@@ -14,9 +14,9 @@ public class DecisionPayload {
     private String description;
     private List<String> strategyList;
     private Integer natureStatesCount;
+    private double pessimismCoefficient;
     private int id;
     private Instant createdDate;
-    private double pessimismCoefficient;
 
    public DecisionPayload(Decision decision) {
         this.name = decision.getName();

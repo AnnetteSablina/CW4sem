@@ -15,11 +15,11 @@ public class DecisionParamWindow extends JFrame {
     private static JPanel panel = new JPanel();
     private static ArrayList<JTextField> fields = new ArrayList<>();
     private static ArrayList<JComboBox<Integer>> states = new ArrayList<>();
-    private static final Integer[] values = {1,2,3,4};
+    private static final Integer[] values = {1, 2, 3, 4};
     private static Integer quantity;
 
     static {
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 90, 50));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 90, 30));
         panel.setBackground(new Color(120, 110, 255));
     }
 
@@ -48,23 +48,29 @@ public class DecisionParamWindow extends JFrame {
         //changeChooseUserUI();
         this.add(panel);
         this.setVisible(true);
-        ExceptionWindow.makeLabel("При изменении результаты в БД будут удалены");
+        if (Controller.getInstance().getChangeableDecision() != null) {
+            ExceptionWindow.makeLabel("При изменении результаты в БД будут удалены");
+        }
     }
 
     private static void addTextField(String description) {
-        JPanel compPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
+
+        JPanel compPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         compPanel.setBackground(new Color(120, 110, 255));
         WindowUtil.addLabel(description, compPanel);
         JTextField field = new JTextField();
-        field.setText(Controller.getInstance().getChangeableDecision().getName());
+        if (Controller.getInstance().getChangeableDecision() != null) {
+            field.setText(Controller.getInstance().getChangeableDecision().getName());
+        }
         field.setPreferredSize(new Dimension(200, 30));
         field.setBackground(new Color(130, 240, 210));
         fields.add(field);
         compPanel.add(field);
         DecisionParamWindow.panel.add(compPanel);
     }
+
     private static void addComboBox(String description) {
-        JPanel compPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
+        JPanel compPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         compPanel.setBackground(new Color(120, 110, 255));
         WindowUtil.addLabel(description, compPanel);
         JComboBox<Integer> state = new JComboBox<>(values);
@@ -75,6 +81,7 @@ public class DecisionParamWindow extends JFrame {
         states.add(state);
         DecisionParamWindow.panel.add(compPanel);
     }
+
     private static void addButton(String caption, ActionListener actionListener) {
         JButton button = new JButton(caption);
         button.setPreferredSize(new Dimension(200, 30));
@@ -83,22 +90,27 @@ public class DecisionParamWindow extends JFrame {
         button.setBackground(new Color(130, 240, 210));
         DecisionParamWindow.panel.add(button);
     }
+
     private void drawUI() {
         addTextField("Название решения");
+        addTextField("Коэффициент пессимизма");
         addComboBox("Количество состояний природы");
         addComboBox("Количество стратегий");
-        addButton("Назад",e->comeBack());
-        addButton("Сохранить",e->saveAll());
+        addButton("Назад", e -> comeBack());
+        addButton("Сохранить", e -> saveAll());
 
     }
+
     private void saveAll() {
         quantity = (Integer) states.get(1).getSelectedItem();
         new EnterStrategyNameWindow();
     }
+
     private void comeBack() {
         this.dispose();
         WindowFunction.returnIntoUserWindow(panel);
     }
+
     public static void err(Result<Decision> res) {
         ExceptionWindow.makeLabel(res, "Не удается обновить решение");
         if (res.getCode() == 400) {

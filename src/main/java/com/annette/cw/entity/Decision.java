@@ -27,7 +27,7 @@ public class Decision {
     Decision(DecisionPayload payload, User user, int id) {
         this.name = payload.getName();
         this.description = payload.getDescription();
-        this.strategyList = payload.getStrategyList();//TODO сделай глубокое копирование
+        this.strategyList = payload.getStrategyList();
         this.records = Collections.emptyList();
         this.user = user;
         this.createdDate = payload.getCreatedDate();
