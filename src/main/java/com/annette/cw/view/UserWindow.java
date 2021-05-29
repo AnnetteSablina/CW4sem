@@ -61,6 +61,7 @@ public class UserWindow {
     private static void createUserUI() {
         panel.setBorder(BorderFactory.createTitledBorder("Меню пользователя"));
         addButton("Изменить свои данные",e->UserWindowNavigation.changeCurrentUserInfo());
+        addButton("Добавить организацию",e->UserWindowNavigation.addOrganization());
         addButton("Принять решение", e -> UserWindowNavigation.makeDecision());
         addButton(" Выйти из аккаунта ", e -> UserWindowNavigation.returnToStartWindow());
     }

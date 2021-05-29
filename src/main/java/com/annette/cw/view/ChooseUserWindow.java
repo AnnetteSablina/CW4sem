@@ -10,7 +10,6 @@ import com.annette.cw.view.utility.WindowUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +52,8 @@ public class ChooseUserWindow extends JFrame {
 
     private void drawUI() {
         addComboBox();
-        addButton("Назад", e ->comeBack());
-        addButton("Подтвердить", e -> selectCurrentUser());
+        WindowUtil.addSmallWindowButton("Назад", e ->comeBack(),getPanel());
+        WindowUtil.addSmallWindowButton("Подтвердить", e -> selectCurrentUser(),getPanel());
     }
 
     private static void addComboBox() {
@@ -68,15 +67,6 @@ public class ChooseUserWindow extends JFrame {
         compPanel.add(users);
         userBox.add(users);
         ChooseUserWindow.panel.add(compPanel);
-    }
-
-    private static void addButton(String caption, ActionListener actionListener) {
-        JButton button = new JButton(caption);
-        button.setPreferredSize(new Dimension(200, 30));
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.addActionListener(actionListener);
-        button.setBackground(new Color(130, 240, 210));
-        ChooseUserWindow.panel.add(button);
     }
 
     private static void updateComboBox(List<User> userList) {

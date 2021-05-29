@@ -14,8 +14,8 @@ public class DecisionPayload {
     private String description;
     private List<String> strategyList;
     private Integer natureStatesCount;
-    private double pessimismCoefficient;
-    private int id;
+    private Double pessimismCoefficient;
+    private Integer userId;
     private Instant createdDate;
 
    public DecisionPayload(Decision decision) {
@@ -23,7 +23,7 @@ public class DecisionPayload {
         this.description = decision.getDescription();
         this.strategyList = decision.getStrategyList();
         this.natureStatesCount = decision.getNatureStatesCount();
-        this.id = decision.getId();
+        this.userId = decision.getUser().getId();
         this.createdDate = decision.getCreatedDate();
         this.pessimismCoefficient = decision.getPessimismCoefficient();
     }

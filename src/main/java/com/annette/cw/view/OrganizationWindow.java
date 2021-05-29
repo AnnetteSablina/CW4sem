@@ -5,13 +5,12 @@ import com.annette.cw.entity.Organization;
 import com.annette.cw.entity.User;
 import com.annette.cw.service.Provider;
 import com.annette.cw.utility.Result;
-import com.annette.cw.utility.Update;
+import com.annette.cw.utility.Updater;
 import com.annette.cw.view.utility.WindowFunction;
 import com.annette.cw.view.utility.WindowUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class OrganizationWindow extends JFrame {
@@ -64,30 +63,22 @@ public class OrganizationWindow extends JFrame {
         } else {
             addTextField("Название организации:");
             addTextField("Тип организации:");
-            addButton("Назад", e -> WindowFunction.returnIntoUserWindow(panel));
+            WindowUtil.addSmallWindowButton("Назад", e -> WindowFunction.returnIntoUserWindow(panel),getPanel());
         }
 
     }
 
     private static void updateAddWindowUI() {
         panel.setBorder(BorderFactory.createTitledBorder("Добавление организации"));
-        addButton("Сохранить", e -> saveAddedOrg());
+        WindowUtil.addSmallWindowButton("Сохранить", e -> saveAddedOrg(),getPanel());
     }
 
     private static void updateChangeWindowUI() {
         panel.setBorder(BorderFactory.createTitledBorder("Изменение организации"));
-        addButton("Сохранить", e -> saveChangedOrg());
+        WindowUtil.addSmallWindowButton("Сохранить", e -> saveChangedOrg(),getPanel());
         updateTextFields(Controller.getInstance().getSelfUser());
     }
 
-    private static void addButton(String caption, ActionListener actionListener) {
-        JButton button = new JButton(caption);
-        button.setPreferredSize(new Dimension(200, 30));
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.addActionListener(actionListener);
-        button.setBackground(new Color(130, 240, 210));
-        OrganizationWindow.panel.add(button);
-    }
 
     private static void updateTextFields(User currentUser) {
         if (currentUser != null) {
@@ -102,7 +93,7 @@ public class OrganizationWindow extends JFrame {
             ExceptionWindow.makeLabel(res, "Ошибка ввода данных");
         }
         if (res.getCode() == 200) {
-            Update.updateSelfUser();
+            Updater.updateSelfUser();
             WindowFunction.returnIntoUserWindow(getPanel());
         }
     }

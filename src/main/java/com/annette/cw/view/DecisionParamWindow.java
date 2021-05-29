@@ -3,19 +3,19 @@ package com.annette.cw.view;
 import com.annette.cw.controller.Controller;
 import com.annette.cw.entity.Decision;
 import com.annette.cw.utility.Result;
+import com.annette.cw.utility.Updater;
 import com.annette.cw.view.utility.WindowFunction;
 import com.annette.cw.view.utility.WindowUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class DecisionParamWindow extends JFrame {
     private static JPanel panel = new JPanel();
     private static ArrayList<JTextField> fields = new ArrayList<>();
     private static ArrayList<JComboBox<Integer>> states = new ArrayList<>();
-    private static final Integer[] values = {1, 2, 3, 4};
+    private static final Integer[] values = {1, 2, 3, 4, 5, 6, 7};
     private static Integer quantity;
 
     static {
@@ -41,11 +41,13 @@ public class DecisionParamWindow extends JFrame {
 
     public DecisionParamWindow() {
         panel.removeAll();
+        fields.clear();
+        states.clear();
         this.setTitle("Выбор решения");
         this.setResizable(false);
         this.setSize(600, 400);
         drawUI();
-        //changeChooseUserUI();
+        updateUI();
         this.add(panel);
         this.setVisible(true);
         if (Controller.getInstance().getChangeableDecision() != null) {
@@ -54,14 +56,10 @@ public class DecisionParamWindow extends JFrame {
     }
 
     private static void addTextField(String description) {
-
         JPanel compPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         compPanel.setBackground(new Color(120, 110, 255));
         WindowUtil.addLabel(description, compPanel);
         JTextField field = new JTextField();
-        if (Controller.getInstance().getChangeableDecision() != null) {
-            field.setText(Controller.getInstance().getChangeableDecision().getName());
-        }
         field.setPreferredSize(new Dimension(200, 30));
         field.setBackground(new Color(130, 240, 210));
         fields.add(field);
@@ -82,27 +80,43 @@ public class DecisionParamWindow extends JFrame {
         DecisionParamWindow.panel.add(compPanel);
     }
 
-    private static void addButton(String caption, ActionListener actionListener) {
-        JButton button = new JButton(caption);
-        button.setPreferredSize(new Dimension(200, 30));
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.addActionListener(actionListener);
-        button.setBackground(new Color(130, 240, 210));
-        DecisionParamWindow.panel.add(button);
-    }
-
     private void drawUI() {
         addTextField("Название решения");
         addTextField("Коэффициент пессимизма");
         addComboBox("Количество состояний природы");
         addComboBox("Количество стратегий");
-        addButton("Назад", e -> comeBack());
-        addButton("Сохранить", e -> saveAll());
+        WindowUtil.addSmallWindowButton("Назад", e -> comeBack(),getPanel());
+        WindowUtil.addSmallWindowButton("Сохранить", e -> saveAll(),getPanel());
 
+    }
+
+    private static void updateUI() {
+        if (Controller.getInstance().getChangeableDecision() != null) {
+            fields.get(0).setText(Controller.getInstance().getChangeableDecision().getName());
+            fields.get(1).setText(String.valueOf(Controller.getInstance().getChangeableDecision().getPessimismCoefficient()));
+            int pos = updateComboBox(states.get(0), Controller.getInstance().getChangeableDecision().getNatureStatesCount());
+            states.get(0).setSelectedIndex(pos);
+            int pos1 = updateComboBox(states.get(1), Controller.getInstance().getChangeableDecision().getStrategyList().size());
+            states.get(1).setSelectedIndex(pos1);
+
+        }
+    }
+
+    private static int updateComboBox(JComboBox<Integer> state, int value) {
+        int pos = 0;
+        int k = 0;
+        for (Integer i : values) {
+            if (i == value) {
+                pos = k;
+            }
+            k++;
+        }
+        return pos;
     }
 
     private void saveAll() {
         quantity = (Integer) states.get(1).getSelectedItem();
+        this.dispose();
         new EnterStrategyNameWindow();
     }
 
@@ -117,7 +131,10 @@ public class DecisionParamWindow extends JFrame {
             ExceptionWindow.makeLabel(res, "Ошибка ввода данных");
         }
         if (res.getCode() == 200) {
-            WindowFunction.returnIntoUserWindow(getPanel());
+            if (Controller.getInstance().getChangeableDecision() == null) {
+                Updater.updateCurrentDecision(res.getResult());
+            }
+            TableWindow.createTable();
         }
     }
 }

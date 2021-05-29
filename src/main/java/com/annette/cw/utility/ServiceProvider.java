@@ -19,10 +19,13 @@ public class ServiceProvider {
     private UserDAO userDAO;
     private DecisionDAO decisionDAO;
     private OrganizationDAO organizationDAO;
+    private Gson gson = new GsonBuilder().registerTypeAdapter(Instant.class,new InstantTypeConverter()).create();
 
     public UserDAO getUserDAO() {
         return userDAO;
     }
+
+    public Gson getGson() { return gson; }
 
     public AsyncService getService() {
         return service;
@@ -42,10 +45,9 @@ public class ServiceProvider {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .callTimeout(30, TimeUnit.SECONDS)
                 .build();
-        var gson = new GsonBuilder().registerTypeAdapter(Instant.class,new InstantTypeConverter());
         var retrofit = new Retrofit.Builder()
                 .baseUrl("https://cw4sem-server.herokuapp.com/")
-                .addConverterFactory(GsonConverterFactory.create(gson.create()))
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client)
                 .build();
 

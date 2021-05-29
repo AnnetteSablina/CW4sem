@@ -11,6 +11,7 @@ import com.annette.cw.entity.dto.*;
 import com.annette.cw.utility.AsyncService;
 import com.annette.cw.utility.Result;
 import com.annette.cw.utility.ServiceProvider;
+import com.google.gson.Gson;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -26,6 +27,7 @@ public class Provider {
     private DecisionDAO decisionDAO;
     private OrganizationDAO organizationDAO;
     private AsyncService asyncService;
+    private Gson gson;
 
     public Provider() {
         var sp = ServiceProvider.getInstance();
@@ -33,6 +35,7 @@ public class Provider {
         decisionDAO = sp.getDecisionDAO();
         organizationDAO = sp.getOrganizationDAO();
         asyncService = sp.getService();
+        gson = sp.getGson();
     }
 
     public static Provider getInstance() {
@@ -117,19 +120,25 @@ public class Provider {
         execute(call, callback);
     }
 
-    public void updateDecisionById(String name, List<String> strategyList, Integer natureStates,Double coefficient,
+    public void updateDecisionById(String name, List<String> strategyList, Integer natureStates, Double coefficient,
                                    Integer id, Consumer<Result<Decision>> callback) {
+        var payload = new DecisionPayload(name, "", strategyList, natureStates, coefficient, id,
+                Controller.getInstance().getChangeableDecision().getCreatedDate());
+        debugSerialization(payload);
         Call<Decision> call = ServiceProvider.getInstance().getDecisionDAO().
-                updateDecision(new DecisionPayload(name, "", strategyList, natureStates,coefficient, id,
-                        Controller.getInstance().getChangeableDecision().getCreatedDate()) , id);
-        System.out.println(call);
+                updateDecision(payload, id);
         execute(call, callback);
     }
-    public void addDecision(String name, List<String> strategyList, Integer natureStates,Double coefficient, Integer id,
-                            Consumer<Result<Decision>> callback){
-        Call<Decision> call = ServiceProvider.getInstance().getDecisionDAO().addDecision(new DecisionPayload(name,"",
-                strategyList,natureStates,coefficient,id, Instant.now()));
+    public void getDecisionById(Integer id,Consumer<Result<Decision>> callback){
+        Call<Decision> call = ServiceProvider.getInstance().getDecisionDAO().getDecision(id);
         execute(call,callback);
+    }
+
+    public void addDecision(String name, List<String> strategyList, Integer natureStates, Double coefficient, Integer id,
+                            Consumer<Result<Decision>> callback) {
+        Call<Decision> call = ServiceProvider.getInstance().getDecisionDAO().addDecision(new DecisionPayload(name, "",
+                strategyList, natureStates, coefficient, id, Instant.now()));
+        execute(call, callback);
     }
 
     private <T> void execute(Call<T> call, Consumer<Result<T>> callback) {
@@ -156,5 +165,10 @@ public class Provider {
                 callback.accept(result);
             }
         });
+    }
+
+    private <T> void debugSerialization(T object) {
+        String jsonString = gson.toJson(object);
+        System.out.println(jsonString);
     }
 }
