@@ -7,6 +7,7 @@ import com.annette.cw.utility.Updater;
 import com.annette.cw.view.ExceptionWindow;
 import com.annette.cw.view.utility.WindowFunction;
 import com.annette.cw.view.utility.WindowUtil;
+import com.annette.cw.view.utility.validation.DecisionValidator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -116,9 +117,11 @@ public class DecisionParamWindow extends JFrame {
     }
 
     private void saveAll() {
-        quantity = (Integer) states.get(1).getSelectedItem();
-        this.dispose();
-        new EnterStrategyNameWindow();
+        if (DecisionValidator.isDecisionValid(DecisionParamWindow.getFields())) {
+            quantity = (Integer) states.get(1).getSelectedItem();
+            this.dispose();
+            new EnterStrategyNameWindow();
+        }
     }
 
     private void comeBack() {

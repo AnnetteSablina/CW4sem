@@ -2,6 +2,7 @@ package com.annette.cw.view.decision;
 
 import com.annette.cw.controller.Controller;
 import com.annette.cw.service.Provider;
+import com.annette.cw.view.ExceptionWindow;
 import com.annette.cw.view.utility.WindowFunction;
 import com.annette.cw.view.utility.WindowUtil;
 
@@ -65,11 +66,17 @@ public class EnterStrategyNameWindow extends JFrame {
             strategyList.add(strategyName.getText());
         }
         String coefficient = DecisionParamWindow.getFields().get(1).getText();
-        Double coeff = Double.parseDouble(coefficient);
+        Double coeff = null;
+        try {
+            coeff = Double.parseDouble(coefficient);
+        } catch (NumberFormatException e) {
+            ExceptionWindow.makeLabel("Неверный формат коэффициента");
+        }
         Provider.getInstance().updateDecisionById(DecisionParamWindow.getFields().get(0).getText(), strategyList,
                 (Integer) DecisionParamWindow.getStates().get(0).getSelectedItem(), coeff,
                 Controller.getInstance().getChangeableDecision().getId(), DecisionParamWindow::err);
 
         this.dispose();
+
     }
 }
