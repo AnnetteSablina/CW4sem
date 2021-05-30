@@ -16,7 +16,7 @@ public class UserWindowNavigation {
     public static void returnToStartWindow() {
         UserWindow.getPanel().removeAll();
         Window.getWindow().remove(UserWindow.getPanel());
-        TokenChecker.clearFile();
+        new TokenChecker().clearFile();
         ServiceProvider.getInstance().updateToken(null);
         Controller.getInstance().setSelfUser(null);
         StartWindow.startWindow();
@@ -29,6 +29,8 @@ public class UserWindowNavigation {
     }
 
     public static void changeUserInfo() {
+        UserWindow.getPanel().removeAll();
+        Window.getWindow().remove(UserWindow.getPanel());
         new ChooseUserWindow();
     }
 
@@ -39,15 +41,23 @@ public class UserWindowNavigation {
     }
 
     public static void changeOrganization() {
-        UserWindow.getPanel().removeAll();
-        Window.getWindow().remove(UserWindow.getPanel());
-        OrganizationWindow.changeOrgWindow();
+        if (Controller.getInstance().getSelfUser().getOrganization() == null) {
+            ExceptionWindow.makeLabel("Вас нет ни в одной организации");
+            return;
+        } else {
+            UserWindow.getPanel().removeAll();
+            Window.getWindow().remove(UserWindow.getPanel());
+            UserWindow.getPanel().removeAll();
+            Window.getWindow().remove(UserWindow.getPanel());
+            OrganizationWindow.changeOrgWindow();
+        }
     }
 
     public static void showEmployeeCount() {
 
     }
-    public static void createReport(){
+
+    public static void createReport() {
         UserWindow.getPanel().removeAll();
         Window.getWindow().remove(UserWindow.getPanel());
     }

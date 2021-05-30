@@ -175,13 +175,13 @@ public class LogInWindow {
         addTextField("Имя:", false);
         addTextField("Фамилия:", false);
         addComboBox();
-        if (TokenChecker.isFileEmpty()) addButton("Назад", e -> returnToStartWindow());
+        if (new TokenChecker().isFileEmpty()) addButton("Назад", e -> returnToStartWindow());
         else addButton("Назад", e -> WindowFunction.returnIntoUserWindow(panel));
     }
 
     private static void changeCurrentUserUI() {
         panel.setBorder(BorderFactory.createTitledBorder("Изменение текущего пользователя"));
-        Provider.getInstance().getUserByToken(TokenChecker.readToken(), (Result<User> res)
+        Provider.getInstance().getUserByToken(new TokenChecker().readToken(), (Result<User> res)
                 -> {
             updateTextFields(res.getResult());
             Provider.getInstance().getOrganizations((Result<List<Organization>> org) -> {
@@ -287,7 +287,9 @@ public class LogInWindow {
                                 Controller.getInstance().getSelfUser().getRole().equals("ADMIN")) {
                             WindowFunction.returnIntoUserWindow(getPanel());
                         } else {
+                            new TokenChecker();
                             if (TokenChecker.isFileEmpty()) {
+                                new TokenChecker();
                                 TokenChecker.writeToken(res.getResult().getAuthenticationToken());
                                 panel.removeAll();
                                 Window.getWindow().remove(panel);

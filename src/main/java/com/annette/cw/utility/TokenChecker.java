@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class TokenChecker {
-    private static final File tokenFile= new File ("./src/main/resources/tokenFile.txt");
+    private static final File tokenFile= new File ("tokenFile.txt");
     public static boolean isFileEmpty() {
        return tokenFile.length() == 0;
     }

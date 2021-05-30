@@ -58,25 +58,19 @@ public class OrganizationWindow extends JFrame {
     }
 
     private static void drawUserUI() {
-        if (Controller.getInstance().getSelfUser().getOrganization().getId() == null) {
-            ExceptionWindow.makeLabel("Вас нет ни в одной организации");
-            WindowFunction.returnIntoUserWindow(panel);
-        } else {
-            addTextField("Название организации:");
-            addTextField("Тип организации:");
-            WindowUtil.addSmallWindowButton("Назад", e -> WindowFunction.returnIntoUserWindow(panel),getPanel());
-        }
-
+        addTextField("Название организации:");
+        addTextField("Тип организации:");
+        WindowUtil.addSmallWindowButton("Назад", e -> WindowFunction.returnIntoUserWindow(panel), getPanel());
     }
 
     private static void updateAddWindowUI() {
         panel.setBorder(BorderFactory.createTitledBorder("Добавление организации"));
-        WindowUtil.addSmallWindowButton("Сохранить", e -> saveAddedOrg(),getPanel());
+        WindowUtil.addSmallWindowButton("Сохранить", e -> saveAddedOrg(), getPanel());
     }
 
     private static void updateChangeWindowUI() {
         panel.setBorder(BorderFactory.createTitledBorder("Изменение организации"));
-        WindowUtil.addSmallWindowButton("Сохранить", e -> saveChangedOrg(),getPanel());
+        WindowUtil.addSmallWindowButton("Сохранить", e -> saveChangedOrg(), getPanel());
         updateTextFields(Controller.getInstance().getSelfUser());
     }
 
@@ -101,13 +95,13 @@ public class OrganizationWindow extends JFrame {
 
     private static void saveAddedOrg() {
         if (OrganizationValidator.isOrgInfoValid(fields))
-        Provider.getInstance().addOrganization(fields.get(0).getText(), fields.get(1).getText(),
-                OrganizationWindow::err);
+            Provider.getInstance().addOrganization(fields.get(0).getText(), fields.get(1).getText(),
+                    OrganizationWindow::err);
     }
 
     private static void saveChangedOrg() {
         if (OrganizationValidator.isOrgInfoValid(fields))
-        Provider.getInstance().updateOrganization(fields.get(0).getText(), fields.get(1).getText(),
-                Controller.getInstance().getSelfUser().getOrganization().getId(), OrganizationWindow::err);
+            Provider.getInstance().updateOrganization(fields.get(0).getText(), fields.get(1).getText(),
+                    Controller.getInstance().getSelfUser().getOrganization().getId(), OrganizationWindow::err);
     }
 }

@@ -72,7 +72,7 @@ public class StartWindow {
                     (Result<AuthenticationResponse> res) -> {
                         ExceptionWindow.makeLabel(res, "Такой комбинации логина и пароля нет");
                         if (res.getResult() != null) {
-                            TokenChecker.writeToken(res.getResult().getAuthenticationToken());
+                            new TokenChecker().writeToken(res.getResult().getAuthenticationToken());
                             ServiceProvider.getInstance().updateToken(res.getResult().getAuthenticationToken());
                             Provider.getInstance().getUserByToken(res.getResult().getAuthenticationToken(), (Result<User> user) -> {
                                 Controller.getInstance().setSelfUser(user.getResult());

@@ -45,4 +45,8 @@
             <version>1.5.3</version>
         </dependency>
     </dependencies>
+    <resource>
+        <directory>src/main/resources</directory>
+        <targetPath>resources</targetPath>
+    </resource>
 </project>

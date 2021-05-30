@@ -8,7 +8,7 @@ import com.annette.cw.view.ExceptionWindow;
 
 public class Updater {
     public static void updateSelfUser() {
-        Provider.getInstance().getUserByToken(TokenChecker.readToken(), (Result<User> res) -> {
+        Provider.getInstance().getUserByToken(new TokenChecker().readToken(), (Result<User> res) -> {
             if (res.getResult() == null) {
                 ExceptionWindow.makeLabel(res, "Невозможно обновить пользователя");
             }
