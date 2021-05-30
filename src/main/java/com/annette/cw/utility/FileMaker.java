@@ -31,9 +31,7 @@ public class FileMaker {
         someInfo.add(Controller.getInstance().getSelfUser().getUsername());
         someInfo.add(Controller.getInstance().getSelfUser().getOrganization().toString());
         someInfo.add(Controller.getInstance().getChangeableDecision().getName());
-        someInfo.add(info.get(0));
-        someInfo.add(info.get(1));
-        someInfo.add(info.get(2));
+        someInfo.addAll(info);
         return someInfo;
     }
 }
