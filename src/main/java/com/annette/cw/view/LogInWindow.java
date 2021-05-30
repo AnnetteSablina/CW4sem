@@ -9,6 +9,8 @@ import com.annette.cw.utility.AutoEntering;
 import com.annette.cw.utility.Result;
 import com.annette.cw.utility.Searcher;
 import com.annette.cw.utility.TokenChecker;
+import com.annette.cw.view.utility.UserChecker;
+import com.annette.cw.view.utility.UserWindowNavigation;
 import com.annette.cw.view.utility.WindowFunction;
 import com.annette.cw.view.utility.WindowUtil;
 
@@ -27,6 +29,7 @@ public class LogInWindow {
     private static ArrayList<JPasswordField> passFields = new ArrayList<>();
     private static ArrayList<JComboBox<String>> org = new ArrayList<>();
     private static Map<Integer, String> organization = new TreeMap<>();
+    private static boolean isNeedReauthorize = false;
 
     static {
         panel.setBackground(new Color(120, 110, 255));
@@ -45,6 +48,7 @@ public class LogInWindow {
     }
 
     public static void createCurrentUserWindow() {
+        isNeedReauthorize = false;
         panel.removeAll();
         clearAllFields();
         drawUserUI();
@@ -171,7 +175,7 @@ public class LogInWindow {
         addTextField("Имя:", false);
         addTextField("Фамилия:", false);
         addComboBox();
-        if (TokenChecker.isFileEmpty()) addButton("Назад",e->returnToStartWindow());
+        if (TokenChecker.isFileEmpty()) addButton("Назад", e -> returnToStartWindow());
         else addButton("Назад", e -> WindowFunction.returnIntoUserWindow(panel));
     }
 
@@ -223,12 +227,15 @@ public class LogInWindow {
     private static void saveCurrentUserAll() {
         Integer orgId = Searcher.findObjByID(organization, org.get(0).getSelectedIndex());
         if (orgId == -1) orgId = null;
+        if (UserChecker.isCurrentUserNameChanged(fields)) isNeedReauthorize = true;
         if (passFields.get(0).getPassword().length == 0) {
-            Provider.getInstance().updateCurrentUser(fields.get(0).getText(), null, fields.get(1).getText(),
-                    fields.get(2).getText(), fields.get(3).getText(), orgId, LogInWindow::err);
+            if (UserChecker.checkUser(fields))
+                Provider.getInstance().updateCurrentUser(fields.get(0).getText(), null, fields.get(1).getText(),
+                        fields.get(2).getText(), fields.get(3).getText(), orgId, LogInWindow::err);
         } else {
-            Provider.getInstance().updateCurrentUser(fields.get(0).getText(), new String(passFields.get(0).getPassword()),
-                    fields.get(1).getText(), fields.get(2).getText(), fields.get(3).getText(), orgId, LogInWindow::err);
+            if (UserChecker.checkUser(fields) && UserChecker.checkUserPass(passFields))
+                Provider.getInstance().updateCurrentUser(fields.get(0).getText(), new String(passFields.get(0).getPassword()),
+                        fields.get(1).getText(), fields.get(2).getText(), fields.get(3).getText(), orgId, LogInWindow::err);
         }
     }
 
@@ -238,6 +245,11 @@ public class LogInWindow {
             ExceptionWindow.makeLabel(res, "Ошибка ввода данных");
         }
         if (res.getCode() == 200) {
+            if (isNeedReauthorize) {
+                Window.getWindow().remove(panel);
+                UserWindowNavigation.returnToStartWindow();
+                return;
+            }
             Controller.getInstance().setSelfUser(res.getResult());
             WindowFunction.returnIntoUserWindow(getPanel());
         }
@@ -247,10 +259,12 @@ public class LogInWindow {
         Integer orgId = Searcher.findObjByID(organization, org.get(0).getSelectedIndex());
         if (orgId == -1) orgId = null;
         if (passFields.get(0).getPassword().length == 0) {
+            if (UserChecker.checkUser(fields))
             Provider.getInstance().updateUser(fields.get(0).getText(), null, fields.get(1).getText(),
                     fields.get(2).getText(), fields.get(3).getText(), orgId, Controller.getInstance().getChangeableUser().getId(),
                     LogInWindow::err);
         } else {
+            if (UserChecker.checkUser(fields) && UserChecker.checkUserPass(passFields))
             Provider.getInstance().updateUser(fields.get(0).getText(), new String(passFields.get(0).getPassword()),
                     fields.get(1).getText(), fields.get(2).getText(), fields.get(3).getText(), orgId,
                     Controller.getInstance().getChangeableUser().getId(), LogInWindow::err);
@@ -260,6 +274,7 @@ public class LogInWindow {
     private static void saveLogInUserAll() {
         Integer orgId = Searcher.findObjByID(organization, org.get(0).getSelectedIndex());
         if (orgId == -1) orgId = null;
+        if (UserChecker.checkUser(fields) && UserChecker.checkUserPass(passFields))
         Provider.getInstance().signUp(fields.get(0).getText(), new String(passFields.get(0).getPassword()),
                 fields.get(1).getText(), fields.get(2).getText(), fields.get(3).getText(), orgId,
                 (Result<AuthenticationResponse> res) -> {
@@ -286,7 +301,7 @@ public class LogInWindow {
         );
     }
 
-    private static void returnToStartWindow(){
+    private static void returnToStartWindow() {
         panel.removeAll();
         Window.getWindow().remove(panel);
         StartWindow.startWindow();

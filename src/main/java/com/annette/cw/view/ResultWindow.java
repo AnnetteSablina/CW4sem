@@ -4,6 +4,7 @@ import com.annette.cw.controller.Controller;
 import com.annette.cw.entity.DecisionRecord;
 import com.annette.cw.utility.FileMaker;
 import com.annette.cw.utility.Result;
+import com.annette.cw.view.decision.TableWindow;
 import com.annette.cw.view.utility.WindowUtil;
 
 import javax.swing.*;

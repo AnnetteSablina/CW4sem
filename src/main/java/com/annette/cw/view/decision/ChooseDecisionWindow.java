@@ -1,10 +1,12 @@
-package com.annette.cw.view;
+package com.annette.cw.view.decision;
 
 import com.annette.cw.controller.Controller;
 import com.annette.cw.entity.Decision;
 import com.annette.cw.service.Provider;
 import com.annette.cw.utility.Result;
 import com.annette.cw.utility.Searcher;
+import com.annette.cw.view.*;
+import com.annette.cw.view.Window;
 import com.annette.cw.view.utility.WindowFunction;
 import com.annette.cw.view.utility.WindowUtil;
 

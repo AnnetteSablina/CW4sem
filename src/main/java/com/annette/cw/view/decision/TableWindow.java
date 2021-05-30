@@ -1,9 +1,11 @@
-package com.annette.cw.view;
+package com.annette.cw.view.decision;
 
 import com.annette.cw.controller.Controller;
 import com.annette.cw.entity.DecisionRecord;
 import com.annette.cw.service.Provider;
 import com.annette.cw.utility.Result;
+import com.annette.cw.view.ExceptionWindow;
+import com.annette.cw.view.ResultWindow;
 import com.annette.cw.view.utility.CellEditor;
 import com.annette.cw.view.utility.TableModel;
 import com.annette.cw.view.utility.WindowFunction;

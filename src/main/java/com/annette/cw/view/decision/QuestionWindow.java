@@ -1,4 +1,4 @@
-package com.annette.cw.view;
+package com.annette.cw.view.decision;
 
 import com.annette.cw.view.utility.WindowFunction;
 import com.annette.cw.view.utility.WindowUtil;

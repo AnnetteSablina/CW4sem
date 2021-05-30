@@ -1,8 +1,10 @@
 package com.annette.cw.view.utility;
 
 import com.annette.cw.controller.Controller;
+import com.annette.cw.utility.ServiceProvider;
 import com.annette.cw.utility.TokenChecker;
 import com.annette.cw.view.*;
+import com.annette.cw.view.decision.ChooseDecisionWindow;
 
 public class UserWindowNavigation {
     public static void logInUser() {
@@ -15,7 +17,8 @@ public class UserWindowNavigation {
         UserWindow.getPanel().removeAll();
         Window.getWindow().remove(UserWindow.getPanel());
         TokenChecker.clearFile();
-        Controller.getInstance().clear();
+        ServiceProvider.getInstance().updateToken(null);
+        Controller.getInstance().setSelfUser(null);
         StartWindow.startWindow();
     }
 
