@@ -6,6 +6,7 @@ import com.annette.cw.entity.dto.AuthenticationResponse;
 import com.annette.cw.service.Provider;
 import com.annette.cw.utility.*;
 import com.annette.cw.view.utility.WindowFunction;
+import com.annette.cw.view.utility.validation.AuthorizationValidator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,11 +28,11 @@ public class StartWindow {
         Font font = new Font(null, Font.PLAIN, 25);
         headerLabel.setFont(font);
 
-        JPanel signUpLabel = new JPanel(new FlowLayout(FlowLayout.CENTER,250,0));
+        JPanel signUpLabel = new JPanel(new FlowLayout(FlowLayout.CENTER, 250, 0));
         signUpLabel.setBackground(new Color(120, 110, 255));
 
         JButton button = new JButton("Зарегистрироваться");
-        button.addActionListener(e->signUp());
+        button.addActionListener(e -> signUp());
         signUpLabel.add(button);
 
         controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
@@ -66,28 +67,31 @@ public class StartWindow {
     }
 
     private static void checkLogPass(JTextField userLogin, JPasswordField password) {
-        Provider.getInstance().logIn(userLogin.getText(), new String(password.getPassword()),
-                (Result<AuthenticationResponse> res) -> {
-                    ExceptionWindow.makeLabel(res, "Такой комбинации логина и пароля нет");
-                    if (res.getResult() != null) {
-                        TokenChecker.writeToken(res.getResult().getAuthenticationToken());
-                        ServiceProvider.getInstance().updateToken(res.getResult().getAuthenticationToken());
-                        Provider.getInstance().getUserByToken(res.getResult().getAuthenticationToken(), (Result<User> user) -> {
-                            Controller.getInstance().setSelfUser(user.getResult());
-                            if (Position.isAdmin(user)) {
-                                Window.getWindow().remove(grid);
-                                UserWindow.createAdminWindow();
-                            } else {
-                                Window.getWindow().remove(grid);
-                                UserWindow.createUserWindow();
-                            }
+        if (AuthorizationValidator.isAuthCorrect(userLogin.getText(), new String(password.getPassword()))) {
+            Provider.getInstance().logIn(userLogin.getText(), new String(password.getPassword()),
+                    (Result<AuthenticationResponse> res) -> {
+                        ExceptionWindow.makeLabel(res, "Такой комбинации логина и пароля нет");
+                        if (res.getResult() != null) {
+                            TokenChecker.writeToken(res.getResult().getAuthenticationToken());
+                            ServiceProvider.getInstance().updateToken(res.getResult().getAuthenticationToken());
+                            Provider.getInstance().getUserByToken(res.getResult().getAuthenticationToken(), (Result<User> user) -> {
+                                Controller.getInstance().setSelfUser(user.getResult());
+                                if (Position.isAdmin(user)) {
+                                    Window.getWindow().remove(grid);
+                                    UserWindow.createAdminWindow();
+                                } else {
+                                    Window.getWindow().remove(grid);
+                                    UserWindow.createUserWindow();
+                                }
 
-                        });
+                            });
+                        }
                     }
-                }
-        );
+            );
+        }
     }
-    private static void signUp(){
+
+    private static void signUp() {
         grid.removeAll();
         Window.getWindow().remove(grid);
         LogInWindow.createLogInWindow();

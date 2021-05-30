@@ -9,7 +9,7 @@ import com.annette.cw.utility.AutoEntering;
 import com.annette.cw.utility.Result;
 import com.annette.cw.utility.Searcher;
 import com.annette.cw.utility.TokenChecker;
-import com.annette.cw.view.utility.UserChecker;
+import com.annette.cw.view.utility.validation.UserChecker;
 import com.annette.cw.view.utility.UserWindowNavigation;
 import com.annette.cw.view.utility.WindowFunction;
 import com.annette.cw.view.utility.WindowUtil;

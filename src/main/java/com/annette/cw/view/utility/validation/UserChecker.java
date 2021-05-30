@@ -1,4 +1,4 @@
-package com.annette.cw.view.utility;
+package com.annette.cw.view.utility.validation;
 
 import com.annette.cw.controller.Controller;
 import com.annette.cw.view.ExceptionWindow;

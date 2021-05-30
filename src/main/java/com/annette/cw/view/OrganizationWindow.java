@@ -8,6 +8,7 @@ import com.annette.cw.utility.Result;
 import com.annette.cw.utility.Updater;
 import com.annette.cw.view.utility.WindowFunction;
 import com.annette.cw.view.utility.WindowUtil;
+import com.annette.cw.view.utility.validation.OrganizationValidator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,7 +89,7 @@ public class OrganizationWindow extends JFrame {
     }
 
     private static void err(Result<Organization> res) {
-        ExceptionWindow.makeLabel(res, "Не удается обновить пользователя");
+        ExceptionWindow.makeLabel(res, "Не удается обновить организацию");
         if (res.getCode() == 400) {
             ExceptionWindow.makeLabel(res, "Ошибка ввода данных");
         }
@@ -99,11 +100,13 @@ public class OrganizationWindow extends JFrame {
     }
 
     private static void saveAddedOrg() {
+        if (OrganizationValidator.isOrgInfoValid(fields))
         Provider.getInstance().addOrganization(fields.get(0).getText(), fields.get(1).getText(),
                 OrganizationWindow::err);
     }
 
     private static void saveChangedOrg() {
+        if (OrganizationValidator.isOrgInfoValid(fields))
         Provider.getInstance().updateOrganization(fields.get(0).getText(), fields.get(1).getText(),
                 Controller.getInstance().getSelfUser().getOrganization().getId(), OrganizationWindow::err);
     }
