@@ -64,7 +64,7 @@ public class ResultWindow extends JFrame {
             }
         }
 
-        //addText("Итого: " + strategyList.get(mostCommon(popularity)));
+        addText("Итого: " + strategyList.get(mostCommon(popularity)));
         WindowUtil.addSmallWindowButton("Окей", e -> goToUserMenu(), panel);
         FileMaker.writeInfoIntoFile(getInfo(),res.getResult().getId());
     }
