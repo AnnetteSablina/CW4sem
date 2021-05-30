@@ -22,7 +22,7 @@ public class Decision {
     private Instant createdDate;
     private int natureStatesCount;
     private double pessimismCoefficient;
-    private final int id;
+    private final Integer id;
 
     Decision(DecisionPayload payload, User user, int id) {
         this.name = payload.getName();

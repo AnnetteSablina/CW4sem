@@ -2,6 +2,7 @@ package com.annette.cw.view;
 
 import com.annette.cw.controller.Controller;
 import com.annette.cw.entity.DecisionRecord;
+import com.annette.cw.utility.FileMaker;
 import com.annette.cw.utility.Result;
 import com.annette.cw.view.utility.WindowUtil;
 
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 public class ResultWindow extends JFrame {
     private static JPanel panel = new JPanel();
+    private static List<String> info = new ArrayList<>();
 
     static {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 25));
@@ -25,8 +27,13 @@ public class ResultWindow extends JFrame {
         return panel;
     }
 
+    public static List<String> getInfo() {
+        return info;
+    }
+
     public ResultWindow() {
         panel.removeAll();
+        info.clear();
         this.setTitle("Результат");
         this.setResizable(false);
         this.setSize(600, 400);
@@ -57,8 +64,9 @@ public class ResultWindow extends JFrame {
             }
         }
 
-        addText("Итого: " + strategyList.get(mostCommon(popularity)));
+        //addText("Итого: " + strategyList.get(mostCommon(popularity)));
         WindowUtil.addSmallWindowButton("Окей", e -> goToUserMenu(), panel);
+        FileMaker.writeInfoIntoFile(getInfo(),res.getResult().getId());
     }
 
     private static void addText(String description) {
@@ -66,6 +74,7 @@ public class ResultWindow extends JFrame {
         compPanel.setBackground(new Color(120, 110, 255));
         JLabel nameLabel = new JLabel(description);
         nameLabel.setPreferredSize(new Dimension(450, 30));
+        info.add(nameLabel.getText());
         compPanel.add(nameLabel);
         ResultWindow.panel.add(compPanel);
     }

@@ -32,7 +32,6 @@ public class UserWindowNavigation {
     public static void addOrganization() {
         UserWindow.getPanel().removeAll();
         Window.getWindow().remove(UserWindow.getPanel());
-        System.out.println("lol");
         OrganizationWindow.createAddOrgWindow();
     }
 
@@ -44,6 +43,10 @@ public class UserWindowNavigation {
 
     public static void showEmployeeCount() {
 
+    }
+    public static void createReport(){
+        UserWindow.getPanel().removeAll();
+        Window.getWindow().remove(UserWindow.getPanel());
     }
 
     public static void makeDecision() {
