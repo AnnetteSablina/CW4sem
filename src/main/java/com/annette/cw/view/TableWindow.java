@@ -1,7 +1,13 @@
 package com.annette.cw.view;
 
+import com.annette.cw.controller.Controller;
+import com.annette.cw.entity.DecisionRecord;
+import com.annette.cw.service.Provider;
+import com.annette.cw.utility.Result;
+import com.annette.cw.view.utility.CellEditor;
 import com.annette.cw.view.utility.TableModel;
 import com.annette.cw.view.utility.WindowFunction;
+import com.annette.cw.view.utility.WindowUtil;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -18,20 +24,22 @@ public class TableWindow {
 
     static {
         panel.setBackground(new Color(120, 110, 255));
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 40));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 150, 90));
     }
 
     public static JPanel getPanel() {
         return panel;
     }
 
-    public static void createTable() {
+    private static void createTable() {
+        panel.removeAll();
         table = new JTable(new TableModel());
         columnModel = table.getColumnModel();
         Enumeration<TableColumn> e = columnModel.getColumns();
         int pos = 0;
         while (e.hasMoreElements()) {
             TableColumn column = e.nextElement();
+            column.setCellEditor(new CellEditor());
             if (pos == 0) {
                 column.setPreferredWidth(200);
             } else column.setPreferredWidth(30);
@@ -49,41 +57,47 @@ public class TableWindow {
         WindowFunction.util(panel);
     }
 
-    public void createUI() {
+    public static void createUI() {
         createTable();
-       // WindowUtil.addSmallWindowButton("Назад",);
-        // Window
-
+        WindowUtil.addSmallWindowButton("В главное меню",e->goToUserMenu(),getPanel());
+        WindowUtil.addSmallWindowButton("Сохранить", e -> saveAll(), getPanel());
     }
 
-    private List<List<Double>> readInfoFromTable() {
+    private static List<List<Double>> readInfoFromTable() {
         List<List<Double>> dataFromTable = new ArrayList<>();
         try {
-            String str;
-            Object ob;
             int index = 0;
-            List<Double> columnData = new ArrayList<>();
             for (int i = 1; i < table.getColumnCount(); i++) {
+                System.out.println(table.getColumnCount());
+                List<Double> columnData = new ArrayList<>();
                 int columnIndex = 0;
-                for (int k = 1; k < table.getRowCount(); k++) {
-                    ob = table.getModel().getValueAt(k, i);
-                    columnData.add(columnIndex, Double.valueOf(ob.toString()));
+                for (int k = 0; k < table.getRowCount(); k++) {
+                    System.out.println(table.getModel().getValueAt(k, i));
+                    columnData.add(columnIndex, Double.valueOf(table.getModel().getValueAt(k, i).toString()));
                     columnIndex++;
                 }
                 dataFromTable.add(index, columnData);
                 index++;
             }
-
         } catch (NullPointerException e) {
             ExceptionWindow.makeLabel("Все поля должны быть заполнены");
-        } catch (ClassCastException e) {
+        } catch (NumberFormatException e) {
             ExceptionWindow.makeLabel("Проверьте формат данных в ячейках");
         }
+        System.out.println(dataFromTable);
         return dataFromTable;
     }
 
-    private void saveAll() {
-
+    private static void saveAll() {
+        List<List<Double>> data = readInfoFromTable();
+        Provider.getInstance().makeDecisionById(Controller.getInstance().getChangeableDecision().getId(), data,
+                (Result<DecisionRecord> res) -> {
+                    if (res.getCode() == 400) ExceptionWindow.makeLabel("Ошибка ввода данных");
+                    if (res.getCode() == 200) { new ResultWindow().createResult(res); }
+                });
+    }
+    public static void goToUserMenu(){
+        WindowFunction.returnIntoUserWindow(panel);
     }
 
 }

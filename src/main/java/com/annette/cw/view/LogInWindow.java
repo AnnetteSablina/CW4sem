@@ -238,6 +238,7 @@ public class LogInWindow {
             ExceptionWindow.makeLabel(res, "Ошибка ввода данных");
         }
         if (res.getCode() == 200) {
+            Controller.getInstance().setSelfUser(res.getResult());
             WindowFunction.returnIntoUserWindow(getPanel());
         }
     }

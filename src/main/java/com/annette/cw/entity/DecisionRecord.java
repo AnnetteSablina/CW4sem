@@ -11,5 +11,5 @@ public class DecisionRecord {
     private int gurvitzCriterion;
     private Decision decision;
     private long id;
-    private final Instant createdDate= Instant.now();
+    private final Instant createdDate = Instant.now();
 }

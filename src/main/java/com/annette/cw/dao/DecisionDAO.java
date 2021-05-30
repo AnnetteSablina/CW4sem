@@ -2,6 +2,7 @@ package com.annette.cw.dao;
 
 
 import com.annette.cw.entity.Decision;
+import com.annette.cw.entity.DecisionRecord;
 import com.annette.cw.entity.dto.DecisionPayload;
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -16,7 +17,7 @@ public interface DecisionDAO {
     Call<Decision> getDecision(@Path("id") Integer id);
 
     @POST("/decisions/make/{id}")
-    Call<Decision> makeDecision(@Path("id") Integer id);
+    Call<DecisionRecord> makeDecision(@Body List<List<Double>> matrix, @Path("id") Integer id);
 
     @DELETE("/decisions/{id}")
     Call<String> deleteDecision(@Path("id") Integer id);

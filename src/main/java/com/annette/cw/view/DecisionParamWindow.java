@@ -19,7 +19,7 @@ public class DecisionParamWindow extends JFrame {
     private static Integer quantity;
 
     static {
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 90, 30));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 30));
         panel.setBackground(new Color(120, 110, 255));
     }
 
@@ -85,8 +85,8 @@ public class DecisionParamWindow extends JFrame {
         addTextField("Коэффициент пессимизма");
         addComboBox("Количество состояний природы");
         addComboBox("Количество стратегий");
-        WindowUtil.addSmallWindowButton("Назад", e -> comeBack(),getPanel());
-        WindowUtil.addSmallWindowButton("Сохранить", e -> saveAll(),getPanel());
+        WindowUtil.addSmallWindowButton("Назад", e -> comeBack(), getPanel());
+        WindowUtil.addSmallWindowButton("Сохранить", e -> saveAll(), getPanel());
 
     }
 
@@ -131,10 +131,8 @@ public class DecisionParamWindow extends JFrame {
             ExceptionWindow.makeLabel(res, "Ошибка ввода данных");
         }
         if (res.getCode() == 200) {
-            if (Controller.getInstance().getChangeableDecision() == null) {
-                Updater.updateCurrentDecision(res.getResult());
-            }
-            TableWindow.createTable();
+            Updater.updateCurrentDecision(res.getResult());
+            TableWindow.createUI();
         }
     }
 }

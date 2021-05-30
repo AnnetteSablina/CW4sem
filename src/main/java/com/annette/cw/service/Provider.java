@@ -5,6 +5,7 @@ import com.annette.cw.dao.DecisionDAO;
 import com.annette.cw.dao.OrganizationDAO;
 import com.annette.cw.dao.UserDAO;
 import com.annette.cw.entity.Decision;
+import com.annette.cw.entity.DecisionRecord;
 import com.annette.cw.entity.Organization;
 import com.annette.cw.entity.User;
 import com.annette.cw.entity.dto.*;
@@ -12,6 +13,7 @@ import com.annette.cw.utility.AsyncService;
 import com.annette.cw.utility.Result;
 import com.annette.cw.utility.ServiceProvider;
 import com.google.gson.Gson;
+import lombok.Data;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -20,7 +22,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.function.Consumer;
 
-
+@Data
 public class Provider {
     private volatile static Provider instance;
     private UserDAO userDAO;
@@ -115,8 +117,8 @@ public class Provider {
         execute(call, callback);
     }
 
-    public void makeDecisionById(Integer id, Consumer<Result<Decision>> callback) {
-        Call<Decision> call = ServiceProvider.getInstance().getDecisionDAO().makeDecision(id);
+    public void makeDecisionById(Integer id,List<List<Double>> matrix, Consumer<Result<DecisionRecord>> callback) {
+        Call<DecisionRecord> call = ServiceProvider.getInstance().getDecisionDAO().makeDecision(matrix,id);
         execute(call, callback);
     }
 

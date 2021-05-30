@@ -42,13 +42,15 @@ public class UserWindowNavigation {
         OrganizationWindow.changeOrgWindow();
     }
 
-    ;
-
     public static void showEmployeeCount() {
 
     }
 
     public static void makeDecision() {
+        if (Controller.getInstance().getSelfUser().getOrganization() == null) {
+            ExceptionWindow.makeLabel("Вы не можете принять решение будучи безработным");
+            return;
+        }
         new ChooseDecisionWindow();
     }
 }

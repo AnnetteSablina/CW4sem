@@ -3,8 +3,9 @@ package com.annette.cw.view.utility;
 import javax.swing.table.AbstractTableModel;
 
 public class TableModel extends AbstractTableModel {
-    private static String[][] data = TableDataCreator.createData();
-    private static String[] columnNames = TableDataCreator.createColumns();
+    private String[][] data = TableDataCreator.createData();
+    private String[] columnNames = TableDataCreator.createColumns();
+
 
     @Override
     public int getRowCount() {
@@ -28,5 +29,9 @@ public class TableModel extends AbstractTableModel {
     public String getColumnName(int col) {
         return columnNames[col];
     }
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex){
+        data[rowIndex][columnIndex] = aValue.toString();
+    }
+
 
 }

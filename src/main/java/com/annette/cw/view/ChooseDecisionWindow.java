@@ -21,7 +21,7 @@ public class ChooseDecisionWindow extends JFrame {
     private static Map<Integer, String> decisionMap = new TreeMap<>();
 
     static {
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 90, 100));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 90));
         panel.setBackground(new Color(120, 110, 255));
     }
 
@@ -50,11 +50,10 @@ public class ChooseDecisionWindow extends JFrame {
         return decisionBox;
     }
 
-
     private void drawUI() {
         addComboBox();
-        WindowUtil.addSmallWindowButton("Назад", e -> comeBack(),getPanel());
-        WindowUtil.addSmallWindowButton("Подтвердить", e -> selectCurrentDecision(),getPanel());
+        WindowUtil.addSmallWindowButton("Назад", e -> comeBack(), getPanel());
+        WindowUtil.addSmallWindowButton("Подтвердить", e -> selectCurrentDecision(), getPanel());
     }
 
     private static void addComboBox() {
@@ -75,7 +74,7 @@ public class ChooseDecisionWindow extends JFrame {
             for (Decision decision : decisionList) {
                 decisionMap.put(decision.getId(), decision.getName() + " " + decision.getUser().getUsername());
             }
-            decisionMap.put(-1,"Принять новое решение");
+            decisionMap.put(-1, "Принять новое решение");
             insertValues();
             decisionBox.get(0).setSelectedIndex(0);
         } else ExceptionWindow.makeLabel("Список решений пуст");
@@ -96,18 +95,18 @@ public class ChooseDecisionWindow extends JFrame {
 
     }
 
-   private void selectCurrentDecision() {
-       int decisionId = Searcher.findObjByID(decisionMap, decisionBox.get(0).getSelectedIndex());
-       Controller.getInstance().setChangeableDecision(Searcher.findDecisionById(decisionId));
-       this.dispose();
-       Window.getWindow().remove(UserWindow.getPanel());
-       if (Controller.getInstance().getChangeableDecision()==null){
-           new DecisionParamWindow();
-       }
-       else {
-           new QuestionWindow();
-       }
-   }
+    private void selectCurrentDecision() {
+        int decisionId = Searcher.findObjByID(decisionMap, decisionBox.get(0).getSelectedIndex());
+        Controller.getInstance().setChangeableDecision(Searcher.findDecisionById(decisionId));
+        this.dispose();
+        Window.getWindow().remove(UserWindow.getPanel());
+        if (Controller.getInstance().getChangeableDecision() == null) {
+            new DecisionParamWindow();
+        } else {
+            new QuestionWindow();
+        }
+    }
+
     private static void insertValues() {
         for (Map.Entry<Integer, String> map : decisionMap.entrySet()) {
             decisionBox.get(0).insertItemAt(map.getValue(), decisionBox.get(0).getItemCount());

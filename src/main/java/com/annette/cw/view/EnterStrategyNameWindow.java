@@ -15,7 +15,7 @@ public class EnterStrategyNameWindow extends JFrame {
     private static ArrayList<JTextField> fields = new ArrayList<>();
 
     static {
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 90, 40));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 15));
         panel.setBackground(new Color(120, 110, 255));
     }
 
@@ -25,6 +25,7 @@ public class EnterStrategyNameWindow extends JFrame {
 
     public EnterStrategyNameWindow() {
         panel.removeAll();
+        fields.clear();
         this.setTitle("Ввод названий стратегий");
         this.setResizable(false);
         this.setSize(600, 400);
@@ -38,8 +39,6 @@ public class EnterStrategyNameWindow extends JFrame {
         compPanel.setBackground(new Color(120, 110, 255));
         WindowUtil.addLabel(description, compPanel);
         JTextField field = new JTextField();
-        if(Controller.getInstance().getChangeableDecision() != null)
-        field.setText(Controller.getInstance().getChangeableDecision().getName());
         field.setPreferredSize(new Dimension(200, 30));
         field.setBackground(new Color(130, 240, 210));
         fields.add(field);
@@ -47,13 +46,12 @@ public class EnterStrategyNameWindow extends JFrame {
         EnterStrategyNameWindow.panel.add(compPanel);
     }
 
-
     private void drawUI() {
         for (int i = 0; i < DecisionParamWindow.getQuantity(); i++) {
             addTextField("Название стратегии");
         }
-        WindowUtil.addSmallWindowButton("Назад", e -> comeBack(),getPanel());
-        WindowUtil.addSmallWindowButton("Сохранить", e -> saveAll(),getPanel());
+        WindowUtil.addSmallWindowButton("Назад", e -> comeBack(), getPanel());
+        WindowUtil.addSmallWindowButton("Сохранить", e -> saveAll(), getPanel());
     }
 
     private void comeBack() {
@@ -68,16 +66,10 @@ public class EnterStrategyNameWindow extends JFrame {
         }
         String coefficient = DecisionParamWindow.getFields().get(1).getText();
         Double coeff = Double.parseDouble(coefficient);
+        Provider.getInstance().updateDecisionById(DecisionParamWindow.getFields().get(0).getText(), strategyList,
+                (Integer) DecisionParamWindow.getStates().get(0).getSelectedItem(), coeff,
+                Controller.getInstance().getChangeableDecision().getId(), DecisionParamWindow::err);
 
-        if (Controller.getInstance().getChangeableDecision() == null) {
-            Provider.getInstance().addDecision(DecisionParamWindow.getFields().get(0).getText(), strategyList,
-                    (Integer) DecisionParamWindow.getStates().get(0).getSelectedItem(), coeff,
-                    Controller.getInstance().getSelfUser().getId(), DecisionParamWindow::err);
-        } else {
-            Provider.getInstance().updateDecisionById(DecisionParamWindow.getFields().get(0).getText(), strategyList,
-                    (Integer) DecisionParamWindow.getStates().get(0).getSelectedItem(),coeff,
-                    Controller.getInstance().getChangeableDecision().getId(), DecisionParamWindow::err);
-        }
         this.dispose();
     }
 }
