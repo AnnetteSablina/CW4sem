@@ -22,6 +22,9 @@ public interface UserDAO {
     @POST("/users/update/{id}")
     Call<User> updateUser(@Body UserPayload payload, @Path("id") int id);
 
+    @POST("/users/{id}/promote")
+    Call<User> promoteUser(@Path("id") Integer id);
+
     @POST("/users/update/self")
     Call<User> updateCurrentUser(@Body UserPayload payload);
 

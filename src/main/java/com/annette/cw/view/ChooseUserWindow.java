@@ -3,6 +3,7 @@ package com.annette.cw.view;
 import com.annette.cw.controller.Controller;
 import com.annette.cw.entity.User;
 import com.annette.cw.service.Provider;
+import com.annette.cw.utility.ChangeUserRole;
 import com.annette.cw.utility.Result;
 import com.annette.cw.utility.Searcher;
 import com.annette.cw.view.utility.WindowFunction;
@@ -19,14 +20,16 @@ public class ChooseUserWindow extends JFrame {
     private static JPanel panel = new JPanel();
     private static ArrayList<JComboBox<String>> userBox = new ArrayList<>();
     private static Map<Integer, String> userMap = new TreeMap<>();
+    private int mode;
 
     static {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 80));
         panel.setBackground(new Color(120, 110, 255));
     }
 
-    public ChooseUserWindow() {
+    public ChooseUserWindow(int mode) {
         panel.removeAll();
+        this.mode = mode;
         clearAll();
         this.setTitle("Выбор пользователя");
         this.setResizable(false);
@@ -98,7 +101,8 @@ public class ChooseUserWindow extends JFrame {
         Controller.getInstance().setChangeableUser(Searcher.findUserByID(userId));
         this.dispose();
         Window.getWindow().remove(UserWindow.getPanel());
-        LogInWindow.createUserChangeWindow();
+        if (mode == 0) LogInWindow.createUserChangeWindow();
+        else ChangeUserRole.changeRole();
     }
 
     private static void insertValues() {

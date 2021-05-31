@@ -239,7 +239,7 @@ public class LogInWindow {
         }
     }
 
-    private static void err(Result<User> res) {
+    public static void err(Result<User> res) {
         ExceptionWindow.makeLabel(res, "Не удается обновить пользователя");
         if (res.getCode() == 400) {
             ExceptionWindow.makeLabel(res, "Ошибка ввода данных");

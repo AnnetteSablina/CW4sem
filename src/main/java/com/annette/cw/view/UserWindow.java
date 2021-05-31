@@ -13,7 +13,7 @@ public class UserWindow {
 
     static {
         panel.setBackground(new Color(120, 110, 255));
-        UserWindow.panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 25));
+        UserWindow.panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
     }
 
     public static JPanel getPanel() {
@@ -51,6 +51,7 @@ public class UserWindow {
         addButton("Зарегистрировать пользователя", e -> UserWindowNavigation.logInUser());
         addButton("Изменить свои данные",e->UserWindowNavigation.changeCurrentUserInfo());
         addButton("Изменить данные пользователя ", e -> UserWindowNavigation.changeUserInfo());
+        addButton("Повысить пользователя", e -> UserWindowNavigation.promoteEmployee());
         addButton("Добавить организацию", e -> UserWindowNavigation.addOrganization());
         addButton("Изменить организацию", e -> UserWindowNavigation.changeOrganization());
         addButton("Показать количество сотрудников в организации", e -> UserWindowNavigation.showEmployeeCount());

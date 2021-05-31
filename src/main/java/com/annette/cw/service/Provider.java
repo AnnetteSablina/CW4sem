@@ -77,6 +77,10 @@ public class Provider {
                 new UserPayload(userName, password, email, name, surname, organizationId));
         execute(call, callback);
     }
+    public void promoteUser(Integer userId, Consumer<Result<User>> callback) {
+        Call<User> call = ServiceProvider.getInstance().getUserDAO().promoteUser(userId);
+        execute(call, callback);
+    }
 
     public void updateUser(String userName, String password, String email, String name, String surname,
                            Integer organizationId, Integer userId, Consumer<Result<User>> callback) {

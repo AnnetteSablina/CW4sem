@@ -31,7 +31,7 @@ public class UserWindowNavigation {
     public static void changeUserInfo() {
         UserWindow.getPanel().removeAll();
         Window.getWindow().remove(UserWindow.getPanel());
-        new ChooseUserWindow();
+        new ChooseUserWindow(0);
     }
 
     public static void addOrganization() {
@@ -54,11 +54,22 @@ public class UserWindowNavigation {
     }
 
     public static void showEmployeeCount() {
+        if (Controller.getInstance().getSelfUser().getOrganization() == null) {
+            ExceptionWindow.makeLabel("Вас нет ни в одной организации");
+            return;
+        } else {
+            UserWindow.getPanel().removeAll();
+            Window.getWindow().remove(UserWindow.getPanel());
+            new UserQuantityWindow();
+        }
+    }
 
+    public static void promoteEmployee() {
+        new ChooseUserWindow(1);
     }
 
     public static void createReport() {
-         new TotalReportCreatorWindow();
+        new TotalReportCreatorWindow();
     }
 
     public static void makeDecision() {
