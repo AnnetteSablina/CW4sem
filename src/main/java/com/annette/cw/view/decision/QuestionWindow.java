@@ -42,7 +42,7 @@ public class QuestionWindow extends JFrame {
 
     private void editDecision() {
         this.dispose();
-        new DecisionParamWindow();
+        new DecisionParamWindow(1);
     }
 
     private void comeBack() {

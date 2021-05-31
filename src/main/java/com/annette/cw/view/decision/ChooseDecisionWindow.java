@@ -103,7 +103,7 @@ public class ChooseDecisionWindow extends JFrame {
         this.dispose();
         Window.getWindow().remove(UserWindow.getPanel());
         if (Controller.getInstance().getChangeableDecision() == null) {
-            new DecisionParamWindow();
+            new DecisionParamWindow(0);
         } else {
             new QuestionWindow();
         }

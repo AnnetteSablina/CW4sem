@@ -250,9 +250,18 @@ public class LogInWindow {
                 UserWindowNavigation.returnToStartWindow();
                 return;
             }
-            Controller.getInstance().setSelfUser(res.getResult());
-            WindowFunction.returnIntoUserWindow(getPanel());
-        }
+            System.out.println(res.getResult().getRole());
+            if (Controller.getInstance().getSelfUser().getRole().equals("ADMIN") && res.getResult().getRole().equals("ADMIN")){
+                Controller.getInstance().setSelfUser(res.getResult());
+                WindowFunction.returnIntoUserWindow(getPanel());}
+            else if ((Controller.getInstance().getSelfUser().getRole().equals("USER") && res.getResult().getRole().equals("USER"))){
+                Controller.getInstance().setSelfUser(res.getResult());
+                 WindowFunction.returnIntoUserWindow(getPanel());
+            }
+            else {
+                WindowFunction.returnIntoUserWindow(getPanel());}
+            }
+
     }
 
     private static void saveOtherUserAll() {

@@ -127,12 +127,12 @@ public class Provider {
     }
 
     public void updateDecisionById(String name, List<String> strategyList, Integer natureStates, Double coefficient,
-                                   Integer id, Consumer<Result<Decision>> callback) {
-        var payload = new DecisionPayload(name, "", strategyList, natureStates, coefficient, id,
+                                   Integer userId,Integer decisionId, Consumer<Result<Decision>> callback) {
+        var payload = new DecisionPayload(name, "", strategyList, natureStates, coefficient, userId,
                 Controller.getInstance().getChangeableDecision().getCreatedDate());
         debugSerialization(payload);
         Call<Decision> call = ServiceProvider.getInstance().getDecisionDAO().
-                updateDecision(payload, id);
+                updateDecision(payload, decisionId);
         execute(call, callback);
     }
     public void getDecisionById(Integer id,Consumer<Result<Decision>> callback){

@@ -14,6 +14,7 @@ import java.util.List;
 public class EnterStrategyNameWindow extends JFrame {
     private static JPanel panel = new JPanel();
     private static ArrayList<JTextField> fields = new ArrayList<>();
+    private int mode ;
 
     static {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 15));
@@ -24,9 +25,10 @@ public class EnterStrategyNameWindow extends JFrame {
         return panel;
     }
 
-    public EnterStrategyNameWindow() {
+    public EnterStrategyNameWindow(int mode) {
         panel.removeAll();
         fields.clear();
+        this.mode = mode;
         this.setTitle("Ввод названий стратегий");
         this.setResizable(false);
         this.setSize(600, 400);
@@ -72,10 +74,13 @@ public class EnterStrategyNameWindow extends JFrame {
         } catch (NumberFormatException e) {
             ExceptionWindow.makeLabel("Неверный формат коэффициента");
         }
-        if (Controller.getInstance().getChangeableDecision() != null) {
+        System.out.println(Controller.getInstance().getSelfUser().getId());
+        System.out.println(Controller.getInstance().getChangeableDecision().getId());
+        if (Controller.getInstance().getChangeableDecision() != null && mode == 1) {
             Provider.getInstance().updateDecisionById(DecisionParamWindow.getFields().get(0).getText(), strategyList,
-                    (Integer) DecisionParamWindow.getStates().get(0).getSelectedItem(), coeff,
+                    (Integer) DecisionParamWindow.getStates().get(0).getSelectedItem(), coeff,Controller.getInstance().getSelfUser().getId(),
                     Controller.getInstance().getChangeableDecision().getId(), DecisionParamWindow::err);
+            return;
         }
         Provider.getInstance().addDecision(DecisionParamWindow.getFields().get(0).getText(), strategyList,
                 (Integer) DecisionParamWindow.getStates().get(0).getSelectedItem(), coeff,

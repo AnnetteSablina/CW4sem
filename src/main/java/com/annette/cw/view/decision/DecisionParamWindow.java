@@ -19,6 +19,7 @@ public class DecisionParamWindow extends JFrame {
     private static ArrayList<JComboBox<Integer>> states = new ArrayList<>();
     private static final Integer[] values = {1, 2, 3, 4, 5, 6, 7};
     private static Integer quantity;
+    private int mode;
 
     static {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 30));
@@ -41,8 +42,9 @@ public class DecisionParamWindow extends JFrame {
         return states;
     }
 
-    public DecisionParamWindow() {
+    public DecisionParamWindow(int mode) {
         panel.removeAll();
+        this.mode = mode;
         fields.clear();
         states.clear();
         this.setTitle("Выбор решения");
@@ -120,7 +122,7 @@ public class DecisionParamWindow extends JFrame {
         if (DecisionValidator.isDecisionValid(DecisionParamWindow.getFields())) {
             quantity = (Integer) states.get(1).getSelectedItem();
             this.dispose();
-            new EnterStrategyNameWindow();
+            new EnterStrategyNameWindow(mode);
         }
     }
 
