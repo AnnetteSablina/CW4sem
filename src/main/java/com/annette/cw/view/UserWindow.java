@@ -64,6 +64,7 @@ public class UserWindow {
         addButton("Изменить свои данные",e->UserWindowNavigation.changeCurrentUserInfo());
         addButton("Добавить организацию",e->UserWindowNavigation.addOrganization());
         addButton("Принять решение", e -> UserWindowNavigation.makeDecision());
+        addButton("Создать отчет",e->UserWindowNavigation.createReport());
         addButton(" Выйти из аккаунта ", e -> UserWindowNavigation.returnToStartWindow());
     }
 }

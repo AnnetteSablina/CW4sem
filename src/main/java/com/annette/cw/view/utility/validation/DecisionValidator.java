@@ -12,7 +12,7 @@ public class DecisionValidator {
             return false;
         }
         try {
-            if (!(Double.parseDouble(fields.get(1).getText()) > 0 && Double.parseDouble(fields.get(1).getText()) < 1)) {
+            if (!(Double.parseDouble(fields.get(1).getText()) >= 0 && Double.parseDouble(fields.get(1).getText()) <= 1)) {
                 ExceptionWindow.makeLabel("Коэффициент имеет значение от 0 до 1");
                 return false;
             }

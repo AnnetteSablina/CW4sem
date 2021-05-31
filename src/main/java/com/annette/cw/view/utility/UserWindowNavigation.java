@@ -58,8 +58,7 @@ public class UserWindowNavigation {
     }
 
     public static void createReport() {
-        UserWindow.getPanel().removeAll();
-        Window.getWindow().remove(UserWindow.getPanel());
+         new TotalReportCreatorWindow();
     }
 
     public static void makeDecision() {
