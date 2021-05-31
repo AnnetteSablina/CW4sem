@@ -74,14 +74,14 @@ public class EnterStrategyNameWindow extends JFrame {
         } catch (NumberFormatException e) {
             ExceptionWindow.makeLabel("Неверный формат коэффициента");
         }
-        System.out.println(Controller.getInstance().getSelfUser().getId());
-        System.out.println(Controller.getInstance().getChangeableDecision().getId());
+
         if (Controller.getInstance().getChangeableDecision() != null && mode == 1) {
             Provider.getInstance().updateDecisionById(DecisionParamWindow.getFields().get(0).getText(), strategyList,
                     (Integer) DecisionParamWindow.getStates().get(0).getSelectedItem(), coeff,Controller.getInstance().getSelfUser().getId(),
                     Controller.getInstance().getChangeableDecision().getId(), DecisionParamWindow::err);
             return;
         }
+        if (mode == 0)
         Provider.getInstance().addDecision(DecisionParamWindow.getFields().get(0).getText(), strategyList,
                 (Integer) DecisionParamWindow.getStates().get(0).getSelectedItem(), coeff,
                 Controller.getInstance().getSelfUser().getId(), DecisionParamWindow::err);
